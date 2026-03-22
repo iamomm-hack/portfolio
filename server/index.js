@@ -7,6 +7,11 @@ require('dotenv').config({ path: '../.env.local' }); // Load .env.local if prese
 const app = express();
 app.use(cors());
 
+// Health check route for Render
+app.get('/', (req, res) => {
+  res.status(200).send('Live Chat WebSocket Server is running!');
+});
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
