@@ -15,9 +15,22 @@ import {
   LogOut,
   Activity,
   RefreshCw,
+  UserX,
+  Skull,
 } from "lucide-react";
+import { getAvatarUrl } from "@/lib/avatar";
 
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "";
+
+type OnlineUser = {
+  socketId: string;
+  name: string;
+  avatar: string;
+  color: string;
+  flag: string;
+  location: string;
+  createdAt: string;
+};
 
 export default function AdminPage() {
   const [password, setPassword] = useState("");
@@ -32,16 +45,20 @@ export default function AdminPage() {
     uptime: number;
   } | null>(null);
   const [statsLoading, setStatsLoading] = useState(false);
+  const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
+  const [usersLoading, setUsersLoading] = useState(false);
+  const [kickingId, setKickingId] = useState<string | null>(null);
+
+  const getStoredPw = () => sessionStorage.getItem("admin-pw");
 
   const fetchStats = useCallback(async () => {
     if (!isAuthenticated) return;
     setStatsLoading(true);
     try {
-      const storedPw = sessionStorage.getItem("admin-pw");
       const res = await fetch(`${WS_URL}/admin/stats`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: storedPw }),
+        body: JSON.stringify({ password: getStoredPw() }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -54,9 +71,42 @@ export default function AdminPage() {
     }
   }, [isAuthenticated]);
 
+  const fetchOnlineUsers = useCallback(async () => {
+    if (!isAuthenticated) return;
+    setUsersLoading(true);
+    try {
+      const res = await fetch(`${WS_URL}/admin/online-users`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: getStoredPw() }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setOnlineUsers(data.users || []);
+      }
+    } catch {
+      // silent fail
+    } finally {
+      setUsersLoading(false);
+    }
+  }, [isAuthenticated]);
+
   useEffect(() => {
-    if (isAuthenticated) fetchStats();
-  }, [isAuthenticated, fetchStats]);
+    if (isAuthenticated) {
+      fetchStats();
+      fetchOnlineUsers();
+    }
+  }, [isAuthenticated, fetchStats, fetchOnlineUsers]);
+
+  // Auto-refresh every 10 seconds
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const interval = setInterval(() => {
+      fetchStats();
+      fetchOnlineUsers();
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [isAuthenticated, fetchStats, fetchOnlineUsers]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,7 +114,6 @@ export default function AdminPage() {
     setLoading(true);
 
     try {
-      // Verify password with the server
       const res = await fetch(`${WS_URL}/admin/stats`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -92,11 +141,10 @@ export default function AdminPage() {
     setLoading(true);
 
     try {
-      const storedPw = sessionStorage.getItem("admin-pw");
       const res = await fetch(`${WS_URL}/admin/clear-chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: storedPw }),
+        body: JSON.stringify({ password: getStoredPw() }),
       });
 
       if (res.ok) {
@@ -113,11 +161,43 @@ export default function AdminPage() {
     }
   };
 
+  const handleKickUser = async (socketId: string, userName: string) => {
+    setKickingId(socketId);
+    setSuccess("");
+    setError("");
+
+    try {
+      const res = await fetch(`${WS_URL}/admin/kick-user`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: getStoredPw(), socketId }),
+      });
+
+      if (res.ok) {
+        setSuccess(`${userName} has been kicked!`);
+        // Refresh the user list
+        setTimeout(() => {
+          fetchOnlineUsers();
+          fetchStats();
+        }, 500);
+        setTimeout(() => setSuccess(""), 4000);
+      } else {
+        const data = await res.json();
+        setError(data.error || "Failed to kick user.");
+      }
+    } catch {
+      setError("Server unreachable.");
+    } finally {
+      setKickingId(null);
+    }
+  };
+
   const handleLogout = () => {
     sessionStorage.removeItem("admin-pw");
     setIsAuthenticated(false);
     setPassword("");
     setStats(null);
+    setOnlineUsers([]);
   };
 
   const formatUptime = (seconds: number) => {
@@ -242,6 +322,20 @@ export default function AdminPage() {
           </button>
         </div>
 
+        {/* Global Alerts */}
+        {success && (
+          <div className="flex items-center gap-2 px-4 py-3 bg-green-500/10 border border-green-500/20 rounded-lg">
+            <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
+            <span className="text-green-400 text-sm">{success}</span>
+          </div>
+        )}
+        {error && (
+          <div className="flex items-center gap-2 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+            <XCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+            <span className="text-red-400 text-sm">{error}</span>
+          </div>
+        )}
+
         {/* Stats Cards */}
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-zinc-900/70 backdrop-blur border border-zinc-800/60 rounded-xl p-4">
@@ -279,17 +373,94 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Refresh stats */}
+        {/* Refresh */}
         <button
-          onClick={fetchStats}
-          disabled={statsLoading}
+          onClick={() => { fetchStats(); fetchOnlineUsers(); }}
+          disabled={statsLoading || usersLoading}
           className="flex items-center gap-2 text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
         >
           <RefreshCw
-            className={`w-3 h-3 ${statsLoading ? "animate-spin" : ""}`}
+            className={`w-3 h-3 ${statsLoading || usersLoading ? "animate-spin" : ""}`}
           />
-          Refresh stats
+          Refresh (auto every 10s)
         </button>
+
+        {/* Online Users - Kick Section */}
+        <div className="bg-zinc-900/70 backdrop-blur border border-zinc-800/60 rounded-xl p-6 space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
+              <UserX className="w-5 h-5 text-orange-400" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-white">
+                Online Users
+              </h2>
+              <p className="text-xs text-zinc-500">
+                Kick any user from the site. They will be disconnected immediately.
+              </p>
+            </div>
+          </div>
+
+          {usersLoading && onlineUsers.length === 0 ? (
+            <div className="text-center py-6">
+              <RefreshCw className="w-5 h-5 text-zinc-500 animate-spin mx-auto mb-2" />
+              <p className="text-xs text-zinc-500">Loading users...</p>
+            </div>
+          ) : onlineUsers.length === 0 ? (
+            <div className="text-center py-6">
+              <Users className="w-8 h-8 text-zinc-700 mx-auto mb-2" />
+              <p className="text-sm text-zinc-500">No users online</p>
+            </div>
+          ) : (
+            <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+              {onlineUsers.map((user) => (
+                <div
+                  key={user.socketId}
+                  className="flex items-center justify-between bg-zinc-800/40 border border-zinc-700/30 rounded-lg px-4 py-3 group hover:border-zinc-600/50 transition-all"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="relative flex-shrink-0">
+                      <img
+                        src={getAvatarUrl(user.avatar)}
+                        alt={user.name}
+                        className="w-9 h-9 rounded-full"
+                        style={{ backgroundColor: user.color }}
+                      />
+                      <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-zinc-800" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="text-sm font-medium truncate"
+                          style={{ color: user.color }}
+                        >
+                          {user.name}
+                        </span>
+                        <span className="text-sm">{user.flag}</span>
+                      </div>
+                      <p className="text-[10px] text-zinc-600 font-mono truncate">
+                        {user.socketId}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleKickUser(user.socketId, user.name)}
+                    disabled={kickingId === user.socketId}
+                    className="flex-shrink-0 ml-3 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 hover:text-red-300 disabled:opacity-50 transition-all cursor-pointer"
+                    title={`Kick ${user.name}`}
+                  >
+                    {kickingId === user.socketId ? (
+                      <RefreshCw className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <Skull className="w-3 h-3" />
+                    )}
+                    Kick
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Clear Chat Section */}
         <div className="bg-zinc-900/70 backdrop-blur border border-zinc-800/60 rounded-xl p-6 space-y-4">
@@ -306,20 +477,6 @@ export default function AdminPage() {
               </p>
             </div>
           </div>
-
-          {/* Alerts */}
-          {success && (
-            <div className="flex items-center gap-2 px-4 py-3 bg-green-500/10 border border-green-500/20 rounded-lg animate-in fade-in">
-              <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
-              <span className="text-green-400 text-sm">{success}</span>
-            </div>
-          )}
-          {error && (
-            <div className="flex items-center gap-2 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <XCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
-              <span className="text-red-400 text-sm">{error}</span>
-            </div>
-          )}
 
           <button
             onClick={handleClearChat}

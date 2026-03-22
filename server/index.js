@@ -40,6 +40,40 @@ app.post('/admin/stats', (req, res) => {
   });
 });
 
+// Admin: Get online users list
+app.post('/admin/online-users', (req, res) => {
+  const { password } = req.body;
+  if (password !== ADMIN_PASSWORD) {
+    return res.status(401).json({ error: 'Invalid password' });
+  }
+  const userList = Array.from(users.values()).map(u => ({
+    socketId: u.socketId,
+    name: u.name,
+    avatar: u.avatar,
+    color: u.color,
+    flag: u.flag,
+    location: u.location,
+    createdAt: u.createdAt,
+  }));
+  res.json({ users: userList });
+});
+
+// Admin: Kick a user
+app.post('/admin/kick-user', (req, res) => {
+  const { password, socketId } = req.body;
+  if (password !== ADMIN_PASSWORD) {
+    return res.status(401).json({ error: 'Invalid password' });
+  }
+  const targetSocket = io.sockets.sockets.get(socketId);
+  if (!targetSocket) {
+    return res.status(404).json({ error: 'User not found or already disconnected' });
+  }
+  // Notify the user they've been kicked
+  targetSocket.emit('kicked', { message: 'You have been removed by the admin.' });
+  targetSocket.disconnect(true);
+  res.json({ success: true, message: 'User kicked successfully!' });
+});
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {

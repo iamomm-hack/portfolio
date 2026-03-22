@@ -9,7 +9,7 @@ import {
 import { motion } from "framer-motion";
 
 import { SocketContext } from "@/contexts/socketio";
-import { Users, Users2, Hash, Settings } from "lucide-react";
+import { Users, Users2, Hash, Settings, LogIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { useChatScroll } from "./hooks/use-chat-scroll";
@@ -29,9 +29,27 @@ const OnlineUsers = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
 
+  // Name gate state
+  const [hasJoined, setHasJoined] = useState(() => typeof window !== 'undefined' && !!localStorage.getItem("username"));
+  const [joinName, setJoinName] = useState("");
+
   const currentUser = users.find(u => u.socketId === socket?.id);
   const { playSendSound, playReceiveSound } = useSounds();
   const prevMsgsLength = useRef(msgs.length);
+
+  // Auto-restore name on mount if previously set
+  useEffect(() => {
+    const savedName = localStorage.getItem("username");
+    const savedAvatar = localStorage.getItem("avatar");
+    const savedColor = localStorage.getItem("color");
+    if (savedName && socket) {
+      socket.emit("update-user", {
+        username: savedName,
+        avatar: savedAvatar || "1",
+        color: savedColor || undefined,
+      });
+    }
+  }, [socket]);
 
   useEffect(() => {
     if (msgs.length > prevMsgsLength.current) {
@@ -98,6 +116,18 @@ const OnlineUsers = () => {
     if (color) localStorage.setItem("color", color);
   };
 
+  const handleJoin = () => {
+    const trimmed = joinName.trim();
+    if (!trimmed) return;
+    localStorage.setItem("username", trimmed);
+    socket?.emit("update-user", {
+      username: trimmed,
+      avatar: localStorage.getItem("avatar") || "1",
+      color: localStorage.getItem("color") || undefined,
+    });
+    setHasJoined(true);
+  };
+
   const isSingleUser = users.length <= 1;
 
   return (
@@ -160,7 +190,7 @@ const OnlineUsers = () => {
               <span>general</span>
             </div>
             <div className="flex items-center gap-2">
-              {currentUser && (
+              {currentUser && hasJoined && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -212,24 +242,75 @@ const OnlineUsers = () => {
           </div>
 
           <div className={cn("relative flex flex-col flex-1", THEME.bg.primary)}>
-            <ChatMessageList
-              msgs={msgs}
-              users={users}
-              currentUser={currentUser}
-              chatContainerRef={chatContainer}
-              showScrollButton={showScrollButton}
-              unreads={unreads}
-              scrollToBottom={scrollToBottom}
-              isSingleUser={isSingleUser}
-              typingUsers={typingUsers}
-              getTypingText={getTypingText}
-            />
+            {/* NAME GATE - show before chat */}
+            {!hasJoined ? (
+              <div className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-4">
+                <div className={cn("w-16 h-16 rounded-full flex items-center justify-center", THEME.bg.welcome)}>
+                  <LogIn className={cn("w-8 h-8", THEME.text.header)} />
+                </div>
+                <div>
+                  <h3 className={cn("text-lg font-bold", THEME.text.header)}>Join #general</h3>
+                  <p className={cn("text-xs mt-1 max-w-[220px]", THEME.text.secondary)}>
+                    Enter your name to start chatting
+                  </p>
+                </div>
+                <div className="w-full max-w-[240px] space-y-3">
+                  <input
+                    type="text"
+                    value={joinName}
+                    onChange={(e) => setJoinName(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleJoin()}
+                    placeholder="Your name..."
+                    maxLength={20}
+                    autoFocus
+                    className={cn(
+                      "w-full px-4 py-2.5 rounded-lg border text-sm font-medium text-center outline-none transition-all",
+                      THEME.bg.tertiary,
+                      THEME.text.primary,
+                      THEME.text.placeholder,
+                      THEME.border.primary,
+                      "focus:ring-2 focus:ring-[#5865f2]/40 focus:border-[#5865f2]/40"
+                    )}
+                  />
+                  <button
+                    onClick={handleJoin}
+                    disabled={!joinName.trim()}
+                    className={cn(
+                      "w-full py-2.5 rounded-lg text-sm font-semibold transition-all",
+                      joinName.trim()
+                        ? "bg-[#5865f2] hover:bg-[#4752c4] text-white cursor-pointer shadow-md shadow-[#5865f2]/20"
+                        : "bg-zinc-300 dark:bg-zinc-700 text-zinc-500 cursor-not-allowed"
+                    )}
+                  >
+                    Join Chat
+                  </button>
+                </div>
+                <p className={cn("text-[10px]", THEME.text.secondary)}>
+                  {users.length} {users.length === 1 ? "person" : "people"} online right now
+                </p>
+              </div>
+            ) : (
+              <>
+                <ChatMessageList
+                  msgs={msgs}
+                  users={users}
+                  currentUser={currentUser}
+                  chatContainerRef={chatContainer}
+                  showScrollButton={showScrollButton}
+                  unreads={unreads}
+                  scrollToBottom={scrollToBottom}
+                  isSingleUser={isSingleUser}
+                  typingUsers={typingUsers}
+                  getTypingText={getTypingText}
+                />
 
-            <ChatInput
-              onSendMessage={sendMessage}
-              onTyping={handleTyping}
-              placeholder="Message #general"
-            />
+                <ChatInput
+                  onSendMessage={sendMessage}
+                  onTyping={handleTyping}
+                  placeholder="Message #general"
+                />
+              </>
+            )}
 
             <UserList
               users={users}
@@ -257,3 +338,4 @@ const OnlineUsers = () => {
 };
 
 export default OnlineUsers;
+

@@ -102,6 +102,16 @@ const SocketContextProvider = ({ children }: { children: ReactNode }) => {
     socket.on("chat-cleared", () => {
       setMsgs([]);
     });
+
+    // Admin kicked this user
+    socket.on("kicked", (data: { message: string }) => {
+      toast({
+        variant: "destructive",
+        title: "Removed by Admin",
+        description: data.message,
+      });
+      socket.disconnect();
+    });
     return () => {
       socket.disconnect();
     };
