@@ -6,7 +6,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "chat-server": "node server/index.js"
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
@@ -26,9 +27,12 @@
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "cors": "^2.8.6",
     "date-fns": "^4.1.0",
     "devtools-detector": "^2.0.22",
+    "dotenv": "^17.3.1",
     "embla-carousel-react": "^8.1.8",
+    "express": "^5.2.1",
     "framer-motion": "^11.3.17",
     "gray-matter": "^4.0.3",
     "gsap": "^3.12.5",
@@ -44,6 +48,7 @@
     "react-use-measure": "^2.1.7",
     "resend": "^4.0.0",
     "sass": "^1.77.8",
+    "socket.io": "^4.8.3",
     "socket.io-client": "^4.7.5",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
