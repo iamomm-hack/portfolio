@@ -97,6 +97,11 @@ const SocketContextProvider = ({ children }: { children: ReactNode }) => {
       console.log(data)
       setMsgs((prev) => prev.filter((m) => Number(m.id) !== data.id));
     });
+
+    // Admin cleared all chat
+    socket.on("chat-cleared", () => {
+      setMsgs([]);
+    });
     return () => {
       socket.disconnect();
     };

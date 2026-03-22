@@ -4,12 +4,40 @@ const { Server } = require('socket.io');
 const cors = require('cors');
 require('dotenv').config({ path: '../.env.local' }); // Load .env.local if present
 
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 // Health check route for Render
 app.get('/', (req, res) => {
   res.status(200).send('Live Chat WebSocket Server is running!');
+});
+
+// Admin: Clear all chat messages
+app.post('/admin/clear-chat', (req, res) => {
+  const { password } = req.body;
+  if (password !== ADMIN_PASSWORD) {
+    return res.status(401).json({ error: 'Invalid password' });
+  }
+  msgs = [];
+  msgIdCounter = 1;
+  io.emit('chat-cleared'); // Notify all connected clients
+  res.json({ success: true, message: 'Chat history cleared!' });
+});
+
+// Admin: Get server stats
+app.post('/admin/stats', (req, res) => {
+  const { password } = req.body;
+  if (password !== ADMIN_PASSWORD) {
+    return res.status(401).json({ error: 'Invalid password' });
+  }
+  res.json({
+    totalMessages: msgs.length,
+    onlineUsers: users.size,
+    uptime: process.uptime(),
+  });
 });
 
 const server = http.createServer(app);
@@ -54,7 +82,7 @@ io.on('connection', (socket) => {
 
   // Send initial data to the connected client
   socket.emit('session', { sessionId });
-  socket.emit('msgs-receive-init', msgs);
+  socket.emit('msgs-receive-init', []); // Don't send old messages to new users
   io.emit('users-updated', Array.from(users.values()));
 
   // -- Event Listeners --
