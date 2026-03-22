@@ -13,6 +13,9 @@ import {
   SiSolidity,
   SiTailwindcss,
   SiTypescript,
+  SiPostgresql,
+  SiRedis,
+  SiDocker,
 } from "react-icons/si";
 import { TbBrandFramerMotion } from "react-icons/tb";
 const BASE_PATH = "/assets/projects-screenshots";
@@ -214,6 +217,34 @@ const PROJECT_SKILLS = {
       </span>
     ),
   },
+  postgres: {
+    title: "PostgreSQL",
+    bg: "black",
+    fg: "white",
+    icon: <SiPostgresql />,
+  },
+  redis: {
+    title: "Redis",
+    bg: "black",
+    fg: "white",
+    icon: <SiRedis />,
+  },
+  docker: {
+    title: "Docker",
+    bg: "black",
+    fg: "white",
+    icon: <SiDocker />,
+  },
+  zk: {
+    title: "Zero-Knowledge",
+    bg: "black",
+    fg: "white",
+    icon: (
+      <span>
+        <strong>Z</strong>K
+      </span>
+    ),
+  },
 };
 
 export type Project = {
@@ -229,6 +260,65 @@ export type Project = {
 };
 
 const projects: Project[] = [
+  {
+    id: "stellarid",
+    category: "Web3",
+    title: "StellarID",
+    src: `${BASE_PATH}/stellarid/landing.png`,
+    screenshots: ["landing.png", "use-cases.png", "protocol.png", "dashboard.png", "docs.png"],
+    live: "https://stellarid-id.vercel.app/",
+    github: "https://github.com/iamomm-hack/StellarID",
+    skills: {
+      frontend: [
+        PROJECT_SKILLS.next,
+        PROJECT_SKILLS.react,
+        PROJECT_SKILLS.ts,
+        PROJECT_SKILLS.tailwind,
+      ],
+      backend: [
+        PROJECT_SKILLS.node,
+        PROJECT_SKILLS.express,
+        PROJECT_SKILLS.postgres,
+        PROJECT_SKILLS.redis,
+        PROJECT_SKILLS.stellar,
+        PROJECT_SKILLS.soroban,
+        PROJECT_SKILLS.zk,
+        PROJECT_SKILLS.ipfs,
+        PROJECT_SKILLS.docker,
+      ],
+    },
+    get content() {
+      return (
+        <div>
+          <TypographyP className="font-mono ">
+            StellarID is a privacy-first, decentralized identity platform built on Stellar & Soroban. It solves the privacy problem by allowing users to &apos;Verify Once, Prove Everywhere&apos; using Zero-Knowledge (ZK) Proofs. Generate verifiable offline proofs and shareable PDF certificates without ever exposing your real personal data to third parties!
+          </TypographyP>
+          <ProjectsLinks live={this.live} repo={this.github} />
+          <TypographyH3 className="my-4 mt-8">
+            Zero-Knowledge Proofs
+          </TypographyH3>
+          <p className="font-mono mb-2">
+            Built with Circom and snarkjs, allowing users to generate ZK-SNARK proofs locally to verify their credentials without revealing underlying sensitive information.
+          </p>
+          <SlideShow
+            images={[
+              `${BASE_PATH}/stellarid/landing.png`,
+              `${BASE_PATH}/stellarid/use-cases.png`,
+              `${BASE_PATH}/stellarid/protocol.png`,
+              `${BASE_PATH}/stellarid/dashboard.png`,
+              `${BASE_PATH}/stellarid/docs.png`,
+            ]}
+          />
+          <TypographyH3 className="my-4 mt-8">
+            Decentralized Storage & Auth
+          </TypographyH3>
+          <p className="font-mono mb-2">
+            Credential metadata is securely stored on IPFS via Pinata. Authentication combines JWT with Stellar Wallet signatures for a seamless Web3 login experience.
+          </p>
+        </div>
+      );
+    },
+  },
   {
     id: "chatmint-ai",
     category: "Web3",
