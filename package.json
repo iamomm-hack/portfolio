@@ -2,11 +2,19 @@
   "name": "portfolio",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@10.9.4",
+  "engines": {
+    "node": ">=20 <23",
+    "npm": ">=10 <11"
+  },
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit --incremental false",
+    "test": "node --test tests/quality-gates.test.mjs",
+    "check": "npm run lint && npm run typecheck && npm run test && npm run build",
     "chat-server": "node server/index.js"
   },
   "dependencies": {

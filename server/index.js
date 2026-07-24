@@ -1,14 +1,39 @@
 const express = require('express');
 const http = require('http');
+const path = require('path');
+const { timingSafeEqual } = require('crypto');
 const { Server } = require('socket.io');
 const cors = require('cors');
-require('dotenv').config({ path: '../.env.local' }); // Load .env.local if present
+require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const hasValidAdminPassword = (password) => {
+  if (!ADMIN_PASSWORD || typeof password !== 'string') return false;
+
+  const expected = Buffer.from(ADMIN_PASSWORD);
+  const received = Buffer.from(password);
+
+  return expected.length === received.length && timingSafeEqual(expected, received);
+};
+
+const requireAdmin = (req, res) => {
+  if (!ADMIN_PASSWORD) {
+    res.status(503).json({ error: 'Admin API is disabled' });
+    return false;
+  }
+
+  if (!hasValidAdminPassword(req.body?.password)) {
+    res.status(401).json({ error: 'Invalid password' });
+    return false;
+  }
+
+  return true;
+};
 
 // Health check route for Render
 app.get('/', (req, res) => {
@@ -17,10 +42,7 @@ app.get('/', (req, res) => {
 
 // Admin: Clear all chat messages
 app.post('/admin/clear-chat', (req, res) => {
-  const { password } = req.body;
-  if (password !== ADMIN_PASSWORD) {
-    return res.status(401).json({ error: 'Invalid password' });
-  }
+  if (!requireAdmin(req, res)) return;
   msgs = [];
   msgIdCounter = 1;
   io.emit('chat-cleared'); // Notify all connected clients
@@ -29,10 +51,7 @@ app.post('/admin/clear-chat', (req, res) => {
 
 // Admin: Get server stats
 app.post('/admin/stats', (req, res) => {
-  const { password } = req.body;
-  if (password !== ADMIN_PASSWORD) {
-    return res.status(401).json({ error: 'Invalid password' });
-  }
+  if (!requireAdmin(req, res)) return;
   res.json({
     totalMessages: msgs.length,
     onlineUsers: users.size,
@@ -42,10 +61,7 @@ app.post('/admin/stats', (req, res) => {
 
 // Admin: Get online users list
 app.post('/admin/online-users', (req, res) => {
-  const { password } = req.body;
-  if (password !== ADMIN_PASSWORD) {
-    return res.status(401).json({ error: 'Invalid password' });
-  }
+  if (!requireAdmin(req, res)) return;
   const userList = Array.from(users.values()).map(u => ({
     socketId: u.socketId,
     name: u.name,
@@ -60,10 +76,8 @@ app.post('/admin/online-users', (req, res) => {
 
 // Admin: Kick a user
 app.post('/admin/kick-user', (req, res) => {
-  const { password, socketId } = req.body;
-  if (password !== ADMIN_PASSWORD) {
-    return res.status(401).json({ error: 'Invalid password' });
-  }
+  const { socketId } = req.body;
+  if (!requireAdmin(req, res)) return;
   const targetSocket = io.sockets.sockets.get(socketId);
   if (!targetSocket) {
     return res.status(404).json({ error: 'User not found or already disconnected' });
