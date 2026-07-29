@@ -45,6 +45,14 @@ const navigationStyles = await readFile(
   new URL("../src/components/header/nav/style.module.scss", import.meta.url),
   "utf8",
 );
+const hero = await readFile(
+  new URL("../src/components/sections/hero.tsx", import.meta.url),
+  "utf8",
+);
+const heroStyles = await readFile(
+  new URL("../src/components/sections/hero.module.scss", import.meta.url),
+  "utf8",
+);
 
 function relativeLuminance([red, green, blue]) {
   const [r, g, b] = [red, green, blue].map((channel) => {
@@ -241,4 +249,34 @@ test("the control rail has no preview or continuous input runtime", async () => 
     navigationRuntime,
     /requestAnimationFrame|ResizeObserver|pointermove|mousemove/,
   );
+});
+
+test("the frozen Hero exposes one static editorial hierarchy", () => {
+  assert.equal((hero.match(/<h1\b/g) ?? []).length, 1);
+  assert.match(hero, /Om Kumar/);
+  assert.match(hero, /I engineer resilient digital products/);
+  assert.match(hero, /href="#projects"/);
+  assert.match(hero, />Resume</);
+  assert.match(hero, /<nav aria-label="Social profiles"/);
+  assert.match(hero, /GitHub/);
+  assert.match(hero, /LinkedIn/);
+  assert.match(hero, /X/);
+  assert.doesNotMatch(hero, /framer-motion|BlurIn|BoxReveal|SectionWrapper|gsap/);
+  assert.doesNotMatch(heroStyles, /animation\s*:|transition\s*:/);
+});
+
+test("the keyboard poster reserves the live scene geometry", async () => {
+  await assert.doesNotReject(
+    access(new URL("../public/assets/keyboard-poster.png", import.meta.url)),
+  );
+
+  assert.match(hero, /src="\/assets\/keyboard-poster\.png"/);
+  assert.match(hero, /width=\{1586\}/);
+  assert.match(hero, /height=\{992\}/);
+  assert.match(heroStyles, /aspect-ratio:\s*793 \/ 496/);
+  assert.match(heroStyles, /data-lab-scene-ready="true"/);
+  assert.match(heroStyles, /visibility:\s*hidden/);
+  assert.doesNotMatch(heroStyles, /display:\s*none/);
+  assert.match(labScene, /data-lab-scene-ready=\{isSceneReady\}/);
+  assert.match(animatedBackground, /onSceneVisible\(\)/);
 });

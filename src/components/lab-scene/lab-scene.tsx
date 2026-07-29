@@ -72,6 +72,7 @@ export default function LabScene() {
   const applicationRef = useRef<Application | null>(null);
   const isSceneActiveRef = useRef(false);
   const [hasOwnership, setHasOwnership] = useState(false);
+  const [isSceneReady, setIsSceneReady] = useState(false);
   const isReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const isInViewport = useSceneViewportPresence();
   const isDocumentVisible = useDocumentVisibility();
@@ -103,7 +104,10 @@ export default function LabScene() {
   const handleSceneReady = useCallback(
     (application: Application | null) => {
       applicationRef.current = application;
-      if (!application) return;
+      if (!application) {
+        setIsSceneReady(false);
+        return;
+      }
 
       if (isSceneActiveRef.current) application.play();
       else application.stop();
@@ -111,18 +115,24 @@ export default function LabScene() {
     [],
   );
 
+  const handleSceneVisible = useCallback(() => {
+    setIsSceneReady(true);
+  }, []);
+
   return (
     <div
       className="contents"
       data-lab-scene-active={isSceneActive}
       data-lab-scene-loaded={shouldLoadScene}
       data-lab-scene-owner={hasOwnership ? "scene" : "none"}
+      data-lab-scene-ready={isSceneReady}
     >
       <LaboratoryEnvironment />
       {shouldLoadScene ? (
         <AnimatedBackground
           isSceneActive={isSceneActive}
           onSceneReady={handleSceneReady}
+          onSceneVisible={handleSceneVisible}
         />
       ) : null}
     </div>

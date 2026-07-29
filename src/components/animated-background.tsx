@@ -16,11 +16,13 @@ gsap.registerPlugin(ScrollTrigger);
 type AnimatedBackgroundProps = {
   isSceneActive: boolean;
   onSceneReady: (application: Application | null) => void;
+  onSceneVisible: () => void;
 };
 
 const AnimatedBackground = ({
   isSceneActive,
   onSceneReady,
+  onSceneVisible,
 }: AnimatedBackgroundProps) => {
   const isMobile = useMediaQuery("(max-width: 767px)");
   const splineContainer = useRef<HTMLDivElement>(null);
@@ -296,6 +298,7 @@ const AnimatedBackground = ({
     if (!sceneActiveRef.current) return;
     kbd.visible = true;
     setKeyboardRevealed(true);
+    onSceneVisible();
 
     const currentState = getKeyboardState({ section: activeSection, isMobile });
     const keyboardReveal = gsap.fromTo(
@@ -339,7 +342,7 @@ const AnimatedBackground = ({
       );
       trackSceneAnimation(keycapReveal);
     });
-  }, [activeSection, isMobile, splineApp, trackSceneAnimation]);
+  }, [activeSection, isMobile, onSceneVisible, splineApp, trackSceneAnimation]);
 
   // --- Effects ---
 
