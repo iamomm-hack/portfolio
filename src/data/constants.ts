@@ -236,9 +236,31 @@ export type Experience = {
   company: string;
   description: string[];
   skills: SkillNames[];
+  technologies?: string[];
 };
 
 export const EXPERIENCE: Experience[] = [
+  {
+    id: 4,
+    startDate: "July 2026",
+    endDate: "Present",
+    title: "Ambassador",
+    company: "Stellar India",
+    description: [
+      "Expanded Stellar's developer reach across India by turning ecosystem resources into clear paths from first contribution to production deployment.",
+      "Increased visibility for high-quality Web3 teams through technical advocacy, builder showcases, and startup-focused community programs.",
+      "Connected developers with grants, hackathons, and technical support, strengthening the pipeline of production-ready Stellar and Soroban applications.",
+    ],
+    skills: [],
+    technologies: [
+      "Stellar",
+      "Soroban",
+      "Web3",
+      "Developer Relations",
+      "Community Building",
+      "Technical Advocacy",
+    ],
+  },
   {
     id: 1,
     startDate: "Dec 2025",

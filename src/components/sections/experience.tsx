@@ -77,11 +77,14 @@ const ExperienceSection = () => {
                         Technologies
                       </h4>
                       <ul>
-                        {experience.skills.map((skillName) => {
-                          const skill = SKILLS[skillName];
-
-                          return <li key={skillName}>{skill.label}</li>;
-                        })}
+                        {(
+                          experience.technologies ??
+                          experience.skills.map(
+                            (skillName) => SKILLS[skillName].label,
+                          )
+                        ).map((technology) => (
+                          <li key={technology}>{technology}</li>
+                        ))}
                       </ul>
                     </section>
                   </div>
