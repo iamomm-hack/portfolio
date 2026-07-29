@@ -5,15 +5,24 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { CalendarDays, User } from "lucide-react";
 import RevealAnimation from "@/components/reveal-animations";
+import { config } from "@/data/config";
 
 export const metadata: Metadata = {
   title: "Field notes",
   description: "Technical notes from experiments, builds, and the systems behind them.",
   alternates: { canonical: "/blogs" },
   openGraph: {
-    title: "Field notes — Om Kumar",
+    title: `Field notes | ${config.compactTitle}`,
     description: "Technical notes from experiments, builds, and the systems behind them.",
     url: "/blogs",
+    siteName: config.title,
+    images: [config.ogImg],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Field notes | ${config.compactTitle}`,
+    description: "Technical notes from experiments, builds, and the systems behind them.",
+    images: [config.ogImg],
   },
 };
 

@@ -5,6 +5,7 @@ import {
 } from "@/data/project-records";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { config } from "@/data/config";
 
 const FEATURED_PROJECTS = FEATURED_PROJECT_IDS.map((id) => PROJECT_RECORDS[id]);
 
@@ -26,19 +27,26 @@ export function generateMetadata({
   }
 
   return {
-    title: `${project.title} — Case study`,
+    title: `${project.title} — Case study | ${config.compactTitle}`,
     description: project.valueProposition,
     alternates: { canonical: `/projects/${project.id}` },
     openGraph: {
-      title: `${project.title} — Case study`,
+      title: `${project.title} — Case study | ${config.compactTitle}`,
       description: project.valueProposition,
       url: `/projects/${project.id}`,
+      siteName: config.title,
       images: [
         {
           url: project.src,
           alt: `${project.title} product interface`,
         },
       ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${project.title} — Case study | ${config.compactTitle}`,
+      description: project.valueProposition,
+      images: [project.src],
     },
   };
 }

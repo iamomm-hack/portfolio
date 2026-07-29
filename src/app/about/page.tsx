@@ -249,7 +249,7 @@ function Page() {
           >
             <h1 className="text-3xl mb-10 lg:md-20">About me</h1>
             <p className="mb-10 text-roboto">
-              I&apos;m Om, a product engineer working across Web3, connected
+              I&apos;m Om, a full-stack developer and Web3 builder working across connected
               hardware, and applied AI. I build resilient interfaces and systems
               that turn emerging technology into useful products.
             </p>

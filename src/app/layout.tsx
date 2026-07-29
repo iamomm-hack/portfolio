@@ -11,11 +11,12 @@ import { Providers } from "@/components/providers";
 
 export const metadata: Metadata = {
   metadataBase: new URL(config.site),
+  applicationName: config.title,
   title: {
     default: config.title,
-    template: "%s — Om Kumar",
+    template: `%s | ${config.compactTitle}`,
   },
-  description: config.description.long,
+  description: config.description.meta,
   keywords: config.keywords,
   authors: [{ name: config.author }],
   creator: config.author,
@@ -24,15 +25,15 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: config.title,
-    description: config.description.short,
+    description: config.description.social,
     url: config.site,
-    siteName: config.author,
+    siteName: config.title,
     images: [
       {
         url: config.ogImg,
         width: 1200,
         height: 630,
-        alt: "Om Kumar product engineering portfolio",
+        alt: "Om Kumar full-stack development and Web3 portfolio",
       },
     ],
     type: "website",
@@ -40,9 +41,19 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: config.title,
-    description: config.description.short,
+    description: config.description.social,
     images: [config.ogImg],
   },
+  appleWebApp: {
+    capable: true,
+    title: config.title,
+    statusBarStyle: "black-translucent",
+  },
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+  },
+  manifest: "/manifest.webmanifest",
   robots: {
     index: true,
     follow: true,
@@ -56,15 +67,44 @@ export default function RootLayout({
 }) {
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "Person",
-    name: config.author,
-    url: config.site,
-    email: `mailto:${config.email}`,
-    jobTitle: "Product Engineer",
-    sameAs: [
-      config.social.github,
-      config.social.linkedin,
-      config.social.twitter,
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": `${config.site}/#person`,
+        name: config.author,
+        url: config.site,
+        email: `mailto:${config.email}`,
+        jobTitle: "Full-Stack Developer",
+        description: config.description.profile,
+        knowsAbout: [
+          "Full-Stack Development",
+          "Web3",
+          "Blockchain",
+          "AI",
+          "Backend Engineering",
+          "React",
+          "Next.js",
+          "TypeScript",
+          "Node.js",
+          "Stellar",
+          "Solidity",
+          "Smart Contracts",
+        ],
+        sameAs: [
+          config.social.github,
+          config.social.linkedin,
+          config.social.twitter,
+        ],
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${config.site}/#website`,
+        url: config.site,
+        name: config.title,
+        headline: config.title,
+        description: config.description.meta,
+        author: { "@id": `${config.site}/#person` },
+      },
     ],
   };
 

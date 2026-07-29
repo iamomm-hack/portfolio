@@ -1,74 +1,129 @@
-# 🚀 My Portfolio Website
+# Om Kumar | Full-Stack Developer • Web3 Builder
 
-Welcome to the repository for my personal portfolio website! This is where I showcase my skills, projects, and a bit of my personality through jaw-dropping 3D animations, slick interactions, and fluid motion. If you're into creative web design, you're in the right place.
+A dark editorial portfolio built as an engineering laboratory rather than a traditional résumé. The experience combines a resilient static content layer with a progressively loaded Spline keyboard, focused motion, accessible navigation, case-study foundations, and a compact seven-project gallery.
 
-![Portfolio Preview](https://github.com/Naresh-Khatri/Portfolio/blob/main/public/assets/projects-screenshots/portfolio/landing.png?raw=true)
+[View the live portfolio](https://omdotcmd.vercel.app)
 
-## 🔥 Features
+## Experience
 
-- **3D Animations**: Custom-made interactive keyboard using Spline with skills as keycaps that reveal titles and descriptions on hover.
-- **Slick Interactions**: Powered by GSAP and Framer Motion for smooth animations on scroll, hover, and element reveal.
-- **Space Theme**: Particles on a dark background to simulate a cosmic environment, making the experience out of this world.
-- **Responsive Design**: Fully responsive across all devices to ensure the best user experience.
-- **Innovative Web Design**: Combining creativity with functionality to push the boundaries of modern web design.
+The homepage follows one continuous product narrative:
 
-## 🛠️ Tech Stack
+1. Hero — identity, practice statement, primary action, résumé, and social links.
+2. Skills — an editorial capability index paired with an accessible interactive keyboard.
+3. Experience — a semantic timeline centered on outcomes and ecosystem impact.
+4. Projects — seven projects in one responsive editorial gallery.
+5. Contact — direct channels and a validated project inquiry form.
 
-- **Frontend**: Next.js, React, Tailwind CSS, Shadcn, Aceternity UI
-- **Animations**: GSAP, Framer Motion, Spline Runtime
-- **Misc**: Resend, Socketio, Zod
+The visual foundation uses a dark carbon field, authored grid, static grain, restrained lighting, and self-hosted typography. Motion is intentionally limited to transforms and opacity, with complete reduced-motion fallbacks.
 
-## 🚀 Getting Started
+## Featured projects
+
+- [StellarID](https://stellarid.vercel.app) — privacy-first decentralized identity on Stellar with zero-knowledge credential verification.
+- [ChatMint AI](https://chatmint-ai.vercel.app) — AI-assisted intellectual property registration and on-chain protection.
+- [StellarTipJar](https://stellartipjar.vercel.app) — wallet-native creator tipping with instant Stellar payments and analytics.
+- [MatchMesh](https://matchmesh-app.vercel.app) — AI infrastructure for football agents using MCP, x402, and Injective settlement.
+- [Veriscope](https://veriscope-web.vercel.app) — identity, governance, permissions, and reputation for autonomous agents on Soroban.
+- [Injective Intelligence](https://inj-dna.vercel.app) — behavioral intelligence for Injective wallets and trader psychology.
+- [Miiso](https://miiso-ai.vercel.app) — autonomous contract-risk detection and approval revocation.
+
+Every project includes a real product screenshot plus direct Live Demo and GitHub actions. The first three projects also have statically generated case-study routes.
+
+## Technical architecture
+
+- Next.js 14 App Router and React 18
+- TypeScript with explicit type checking
+- SCSS modules and a shared CSS token foundation
+- GSAP for the frozen Hero choreography
+- Framer Motion for lightweight Projects interactions
+- Spline as the single managed 3D scene
+- Resend and Zod for the contact flow
+- MDX-backed technical writing
+
+`LabScene` is the sole owner of expensive media. The Spline scene loads only after user intent, pauses when its sections leave the viewport or the tab becomes hidden, and is omitted when reduced motion is requested. The page remains usable before the scene loads.
+
+## Accessibility and performance
+
+- Semantic landmarks and heading hierarchy
+- Keyboard-accessible navigation, project cards, and external actions
+- Visible focus states and minimum 44px interactive targets
+- Reduced-motion behavior across scene and interface choreography
+- Real image dimensions reserved through fixed aspect ratios to prevent layout shift
+- Static decorative environment with no particles or additional canvases
+- Route-level code splitting and lazy scene loading
+- Automated quality gates for architectural, accessibility, and performance contracts
+
+## Local development
 
 ### Prerequisites
 
-- Node.js (v14+)
-- npm or yarn
+- Node.js 20–22
+- npm 10
 
-### Installation
+This repository uses npm as its only supported package manager.
 
-1. Clone the repository:
+```bash
+git clone https://github.com/iamomm-hack/portfolio.git
+cd portfolio
+npm install
+cp .env.example .env.local
+npm run dev
+```
 
-    ```bash
-    git clone https://github.com/Naresh-Khatri/Portfolio.git
-    ```
+Open [http://localhost:3000](http://localhost:3000).
 
-2. Navigate to the project directory:
+On Windows PowerShell, copy the environment template with:
 
-    ```bash
-    cd Portfolio
-    ```
+```powershell
+Copy-Item .env.example .env.local
+```
 
-3. Install dependencies:
+## Environment variables
 
-    ```bash
-    npm install
-    # or
-    yarn install
-    ```
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `RESEND_API_KEY` | For contact submissions | Authorizes the contact form email API. |
+| `UMAMI_DOMAIN` | No | Loads privacy-conscious analytics when paired with `UMAMI_SITE_ID`. |
+| `UMAMI_SITE_ID` | No | Identifies the site in Umami when paired with `UMAMI_DOMAIN`. |
 
-4. Run the development server:
+Do not commit `.env.local` or production credentials.
 
-    ```bash
-    npm run dev
-    # or
-    yarn dev
-    ```
+## Commands
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the magic!
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the Turbopack development server. |
+| `npm run build` | Create the optimized production build. |
+| `npm run start` | Serve the production build locally. |
+| `npm run lint` | Run the Next.js ESLint checks. |
+| `npm run typecheck` | Run TypeScript without emitting files. |
+| `npm test` | Run the repository quality gates. |
+| `npm run check` | Run lint, typecheck, tests, and build in sequence. |
 
-## 🚀 Deployment
+## Project structure
 
-This site is deployed on Vercel. For your own deployment, follow these steps:
+```text
+src/
+  app/                    Routes, metadata, API, sitemap, and robots
+  components/
+    case-study/           Shared case-study reading architecture
+    header/               Laboratory control rail and expanded navigation
+    lab-scene/            Scene ownership and environmental shell
+    sections/             Hero, Skills, Experience, Projects, and Contact
+  content/blogs/          MDX articles
+  data/                   Portfolio, project, and site records
+public/assets/
+  projects-screenshots/   Real project imagery
+  seo/                    Social preview assets
+tests/
+  quality-gates.test.mjs  Frozen architectural and quality contracts
+```
 
-1. Push your code to a GitHub repository.
-2. Connect your repository to Vercel.
-3. Vercel will handle the deployment process.
+## Deployment
 
-## 🤝 Contributing
+The production target is Vercel. Configure the environment variables in the deployment project, then use the standard Next.js build command:
 
-If you'd like to contribute or suggest improvements, feel free to open an issue or submit a pull request. All contributions are welcome!
+```bash
+npm run build
+```
 
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
+All public routes, metadata, Open Graph data, canonical URLs, the sitemap, and `robots.txt` are generated by the application.

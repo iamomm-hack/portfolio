@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, CalendarDays, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import RevealAnimation from "@/components/reveal-animations";
+import { config } from "@/data/config";
 
 export async function generateStaticParams() {
   const posts = getBlogPosts();
@@ -25,12 +26,20 @@ export async function generateMetadata({
     description: post.metadata.summary,
     alternates: { canonical: `/blogs/${params.slug}` },
     openGraph: {
-      title: post.metadata.title,
+      title: `${post.metadata.title} | ${config.compactTitle}`,
       description: post.metadata.summary,
       url: `/blogs/${params.slug}`,
       type: "article",
+      siteName: config.title,
+      images: [config.ogImg],
       publishedTime: post.metadata.publishedAt,
       authors: post.metadata.author ? [post.metadata.author] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.metadata.title} | ${config.compactTitle}`,
+      description: post.metadata.summary,
+      images: [config.ogImg],
     },
   };
 }

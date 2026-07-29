@@ -1,17 +1,22 @@
 const config = {
-  title: "Om Kumar — Product Engineer",
+  title: "Om Kumar | Full-Stack Developer • Web3 Builder",
+  compactTitle: "Om Kumar | Full-Stack Developer & Web3 Developer",
   description: {
-    long: "Om Kumar designs and engineers resilient digital products across Web3, connected systems, and applied AI. Explore selected work, technical experience, and case-study records.",
-    short:
-      "Product engineering across Web3, connected systems, and applied AI.",
+    profile:
+      "Full-Stack Developer and Web3 Builder crafting modern web applications, blockchain products, AI-powered systems, and scalable developer experiences.",
+    meta:
+      "Build production-grade full-stack applications, Web3 products, AI tools, and scalable software systems. Portfolio of Om Kumar featuring engineering projects, blockchain applications, and developer experience.",
+    social:
+      "Building production-ready Full-Stack, AI, and Web3 products with a focus on performance, scalability, and user experience.",
   },
   keywords: [
     "Om Kumar",
     "portfolio",
     "full-stack developer",
-    "web3 developer",
-    "IoT developer",
+    "Web3 builder",
+    "Web3 developer",
     "AI engineer",
+    "backend engineering",
     "blockchain",
     "smart contracts",
     "Stellar",
@@ -21,11 +26,10 @@ const config = {
     "React",
     "Next.js",
     "TypeScript",
+    "Node.js",
     "decentralized applications",
     "ChatMint AI",
-    "TrustMarket DEX",
-    "QuantX",
-    "RevealX",
+    "StellarID",
     "StellarTipJar",
   ],
   author: "Om Kumar",

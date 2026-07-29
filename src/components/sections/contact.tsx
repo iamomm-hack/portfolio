@@ -82,7 +82,7 @@ const ContactSection = () => {
             </div>
             <div>
               <dt>Practice</dt>
-              <dd>Product engineering and technical systems</dd>
+              <dd>Full-stack development and Web3 systems</dd>
             </div>
             <div>
               <dt>Response</dt>

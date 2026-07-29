@@ -1,15 +1,23 @@
 import type { Metadata } from "next";
 
+import { config } from "@/data/config";
+
 export const metadata: Metadata = {
   title: "About",
-  description:
-    "About Om Kumar's product engineering practice, tools, and technical focus.",
+  description: config.description.profile,
   alternates: { canonical: "/about" },
   openGraph: {
-    title: "About — Om Kumar",
-    description:
-      "About Om Kumar's product engineering practice, tools, and technical focus.",
+    title: `About | ${config.compactTitle}`,
+    description: config.description.profile,
     url: "/about",
+    siteName: config.title,
+    images: [config.ogImg],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `About | ${config.compactTitle}`,
+    description: config.description.profile,
+    images: [config.ogImg],
   },
 };
 

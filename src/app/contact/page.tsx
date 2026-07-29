@@ -3,12 +3,20 @@ import { config } from "@/data/config";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Start a product engineering conversation with Om Kumar.",
+  description: config.description.profile,
   alternates: { canonical: "/contact" },
   openGraph: {
-    title: "Contact — Om Kumar",
-    description: "Start a product engineering conversation with Om Kumar.",
+    title: `Contact | ${config.compactTitle}`,
+    description: config.description.profile,
     url: `${config.site}/contact`,
+    siteName: config.title,
+    images: [config.ogImg],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Contact | ${config.compactTitle}`,
+    description: config.description.profile,
+    images: [config.ogImg],
   },
 };
 
