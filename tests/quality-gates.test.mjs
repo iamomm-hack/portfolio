@@ -123,6 +123,10 @@ const contactApi = await readFile(
   new URL("../src/app/api/send/route.ts", import.meta.url),
   "utf8",
 );
+const environmentExample = await readFile(
+  new URL("../.env.example", import.meta.url),
+  "utf8",
+);
 const footer = await readFile(
   new URL("../src/components/footer/footer.tsx", import.meta.url),
   "utf8",
@@ -499,6 +503,11 @@ test("the Contact finale preserves the email flow with accessible feedback", () 
   assert.match(contactStyles, /prefers-reduced-motion: reduce/);
   assert.match(contactApi, /Email\.safeParse\(body\)/);
   assert.match(contactApi, /resend\.emails\.send/);
+  assert.doesNotMatch(contactApi, /console\.log\(body\)/);
+  assert.match(environmentExample, /RESEND_API_KEY=/);
+  assert.match(environmentExample, /UMAMI_DOMAIN=/);
+  assert.match(environmentExample, /UMAMI_SITE_ID=/);
+  assert.doesNotMatch(environmentExample, /NEXT_PUBLIC_WS_URL|ADMIN_PASSWORD/);
 });
 
 test("the global polish pass preserves the frozen editorial rhythm", () => {
