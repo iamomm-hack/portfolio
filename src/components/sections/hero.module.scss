@@ -139,10 +139,6 @@
   object-fit: contain;
 }
 
-:global([data-lab-scene-ready="true"] + main) .keyboardPoster {
-  visibility: hidden;
-}
-
 @media (max-width: 64rem) {
   .layout {
     grid-template-columns: minmax(0, 0.95fr) minmax(24rem, 1.05fr);

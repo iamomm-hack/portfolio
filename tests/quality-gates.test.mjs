@@ -53,6 +53,22 @@ const heroStyles = await readFile(
   new URL("../src/components/sections/hero.module.scss", import.meta.url),
   "utf8",
 );
+const heroChoreography = await readFile(
+  new URL("../src/components/sections/hero-choreography.ts", import.meta.url),
+  "utf8",
+);
+const motionTokens = await readFile(
+  new URL("../src/lib/motion-tokens.ts", import.meta.url),
+  "utf8",
+);
+const skills = await readFile(
+  new URL("../src/components/sections/skills.tsx", import.meta.url),
+  "utf8",
+);
+const skillsStyles = await readFile(
+  new URL("../src/components/sections/skills.module.scss", import.meta.url),
+  "utf8",
+);
 
 function relativeLuminance([red, green, blue]) {
   const [r, g, b] = [red, green, blue].map((channel) => {
@@ -257,7 +273,7 @@ test("the frozen Hero exposes one static editorial hierarchy", () => {
   assert.match(hero, /I engineer resilient digital products/);
   assert.match(hero, /href="#projects"/);
   assert.match(hero, />Resume</);
-  assert.match(hero, /<nav aria-label="Social profiles"/);
+  assert.match(hero, /<nav[\s\S]*?aria-label="Social profiles"/);
   assert.match(hero, /GitHub/);
   assert.match(hero, /LinkedIn/);
   assert.match(hero, /X/);
@@ -274,9 +290,38 @@ test("the keyboard poster reserves the live scene geometry", async () => {
   assert.match(hero, /width=\{1586\}/);
   assert.match(hero, /height=\{992\}/);
   assert.match(heroStyles, /aspect-ratio:\s*793 \/ 496/);
-  assert.match(heroStyles, /data-lab-scene-ready="true"/);
-  assert.match(heroStyles, /visibility:\s*hidden/);
   assert.doesNotMatch(heroStyles, /display:\s*none/);
   assert.match(labScene, /data-lab-scene-ready=\{isSceneReady\}/);
   assert.match(animatedBackground, /onSceneVisible\(\)/);
+});
+
+test("GSAP exclusively owns the frozen Hero choreography", () => {
+  assert.match(hero, /createHeroChoreography/);
+  assert.match(heroChoreography, /gsap\.timeline/);
+  assert.equal((heroChoreography.match(/gsap\.timeline/g) ?? []).length, 1);
+  assert.match(heroChoreography, /requestAnimationFrame/);
+  assert.match(heroChoreography, /data-lab-scene-ready/);
+  assert.match(heroChoreography, /scrollTrigger/);
+  assert.match(heroChoreography, /prefers-reduced-motion: reduce/);
+  assert.match(heroChoreography, /MOTION_TOKENS/);
+  assert.doesNotMatch(heroStyles, /animation\s*:|transition\s*:/);
+  assert.doesNotMatch(heroChoreography, /setInterval|pointermove|mousemove/);
+  assert.match(motionTokens, /duration/);
+  assert.match(motionTokens, /easing/);
+  assert.match(motionTokens, /scroll/);
+});
+
+test("the Skills narrative preserves a semantic text equivalent for every key", () => {
+  assert.match(skills, /<section/);
+  assert.match(skills, /aria-labelledby="skills-title"/);
+  assert.match(skills, /<h2 id="skills-title"/);
+  assert.match(skills, /Capability index \/ 24 instruments/);
+  assert.match(skills, /SKILL_GROUPS\.map/);
+  assert.match(skills, /SKILLS\[skillName\]/);
+  assert.match(skills, /skill\.shortDescription/);
+  assert.doesNotMatch(skills, /SectionWrapper|SectionHeader|framer-motion/);
+  assert.doesNotMatch(skills, /canvas|Spline|gsap|requestAnimationFrame/);
+  assert.doesNotMatch(skillsStyles, /animation\s*:|transition\s*:/);
+  assert.match(skillsStyles, /height:\s*100svh/);
+  assert.match(skillsStyles, /height:\s*150svh/);
 });
