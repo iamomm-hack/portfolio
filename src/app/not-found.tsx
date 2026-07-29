@@ -1,16 +1,19 @@
-import NyanCat from "@/components/nyan-cat";
-import { cn } from "@/lib/utils";
-import Spline from "@splinetool/react-spline";
-import { Application } from "@splinetool/runtime";
-import React, { Suspense } from "react";
+import Link from "next/link";
 
 const NotFoundPage = () => {
   return (
-    <>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Spline scene="/assets/404.spline" style={{ height: "100vh" }} />
-      </Suspense>
-    </>
+    <main className="container flex min-h-screen max-w-content flex-col items-center justify-center gap-token-6 text-center">
+      <p className="text-technical text-muted-foreground">404 · Signal lost</p>
+      <h1 className="text-balance font-display text-heading-1 text-bone">
+        This experiment does not exist.
+      </h1>
+      <Link
+        href="/"
+        className="rounded-control border border-border px-token-6 py-token-3 text-supporting"
+      >
+        Return to the lab
+      </Link>
+    </main>
   );
 };
 

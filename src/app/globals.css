@@ -2,75 +2,247 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  scroll-behavior: smooth;
-}
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --brand: hsl(20, 100%, 70%);
+    color-scheme: dark;
+
+    --font-sans: "Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Archivo Black", "Inter Variable", ui-sans-serif, sans-serif;
+    --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+    --color-carbon: 5 6 8;
+    --color-graphite: 11 14 19;
+    --color-instrument: 17 21 27;
+    --color-elevated: 23 28 35;
+    --color-bone: 242 240 233;
+    --color-secondary: 163 169 178;
+    --color-muted: 124 132 144;
+    --color-signal: 184 255 61;
+    --color-focus: 255 255 255;
+    --color-error: 255 107 107;
+    --color-warning: 243 184 91;
+
+    --background: var(--color-carbon);
+    --foreground: var(--color-bone);
+    --card: var(--color-elevated);
+    --card-foreground: var(--color-bone);
+    --popover: var(--color-instrument);
+    --popover-foreground: var(--color-bone);
+    --primary: var(--color-bone);
+    --primary-foreground: var(--color-carbon);
+    --secondary: var(--color-instrument);
+    --secondary-foreground: var(--color-bone);
+    --muted: var(--color-instrument);
+    --muted-foreground: var(--color-secondary);
+    --accent: var(--color-elevated);
+    --accent-foreground: var(--color-bone);
+    --destructive: var(--color-error);
+    --destructive-foreground: var(--color-carbon);
+    --brand: rgb(var(--color-signal));
+
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
+    --space-16: clamp(4rem, 3.25rem + 2vw, 6rem);
+    --space-24: clamp(6rem, 4.5rem + 4vw, 9rem);
+    --space-36: clamp(9rem, 6rem + 8vw, 12rem);
+    --space-48: 12rem;
+
+    --radius-technical: 0.125rem;
+    --radius-control: 0.375rem;
+    --radius-panel: 0.75rem;
+    --radius-media: 1.25rem;
+    --radius-pill: 9999px;
+
+    --border-subtle-color: rgb(var(--color-bone) / 0.08);
+    --border-default-color: rgb(var(--color-bone) / 0.14);
+    --border-active-color: rgb(var(--color-signal) / 0.65);
+    --border-divider-color: rgb(var(--color-bone) / 0.1);
+    --border-subtle: 1px solid var(--border-subtle-color);
+    --border-default: 1px solid var(--border-default-color);
+    --border-active: 1px solid var(--border-active-color);
+    --border-focus: 2px solid rgb(var(--color-focus));
+    --border-divider: 1px solid var(--border-divider-color);
+
+    --shadow-contact: 0 1px 2px rgb(0 0 0 / 0.4), inset 0 1px 0 rgb(255 255 255 / 0.03);
+    --shadow-panel: 0 16px 48px rgb(0 0 0 / 0.32);
+    --shadow-media: 0 32px 96px rgb(0 0 0 / 0.38), inset 0 1px 0 rgb(255 255 255 / 0.05);
+    --shadow-instrument: 0 40px 120px rgb(0 0 0 / 0.5);
+    --shadow-signal: 0 0 24px rgb(var(--color-signal) / 0.16);
+
+    --type-display-hero: clamp(3.5rem, 1.75rem + 7.5vw, 9rem);
+    --type-display-section: clamp(2.75rem, 1.65rem + 4.5vw, 5.5rem);
+    --type-display-project: clamp(2.5rem, 1.7rem + 3.4vw, 4.5rem);
+    --type-heading-1: clamp(2.25rem, 1.8rem + 1.9vw, 3.5rem);
+    --type-heading-2: clamp(1.75rem, 1.45rem + 1.25vw, 2.5rem);
+    --type-heading-3: clamp(1.375rem, 1.2rem + 0.75vw, 1.875rem);
+    --type-lead: clamp(1.25rem, 1.16rem + 0.38vw, 1.5rem);
+    --type-body: clamp(1rem, 0.955rem + 0.19vw, 1.125rem);
+    --type-supporting: clamp(0.875rem, 0.83rem + 0.19vw, 1rem);
+    --type-technical: clamp(0.6875rem, 0.642rem + 0.19vw, 0.8125rem);
+    --measure-body: 65ch;
+
+    --container-canvas: 100rem;
+    --container-wide: 90rem;
+    --container-content: 75rem;
+    --container-editorial: 47.5rem;
+    --container-form: 42.5rem;
+    --gutter-page: clamp(1rem, 0.5rem + 2vw, 3.5rem);
+    --gutter-wide: clamp(3rem, 2.25rem + 2vw, 4.5rem);
+
+    --blur-glass: 10px;
+
+    --environment-grid-minor: 2rem;
+    --environment-grid-major: 8rem;
+    --environment-grid-minor-color: rgb(var(--color-bone) / 0.022);
+    --environment-grid-major-color: rgb(var(--color-bone) / 0.042);
+    --environment-light-neutral: rgb(var(--color-bone) / 0.035);
+    --environment-light-signal: rgb(var(--color-signal) / 0.018);
+    --environment-grain-opacity: 0.028;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+  html {
+    min-width: 20rem;
+    background: rgb(var(--color-carbon));
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply min-h-screen bg-background font-sans text-body text-foreground antialiased;
+  }
+
+  ::selection {
+    color: rgb(var(--color-carbon));
+    background: rgb(var(--color-signal));
+  }
+
+  *:focus-visible {
+    outline: var(--border-focus) !important;
+    outline-offset: 2px !important;
+  }
+
+  @media (forced-colors: active) {
+    *:focus-visible {
+      outline-color: CanvasText !important;
+    }
+  }
+}
+
+@layer components {
+  .laboratory-environment {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+    background-color: rgb(var(--color-carbon));
+    background-image:
+      radial-gradient(
+        ellipse 72% 48% at 78% 2%,
+        var(--environment-light-neutral),
+        transparent 68%
+      ),
+      radial-gradient(
+        ellipse 56% 42% at 12% 34%,
+        var(--environment-light-signal),
+        transparent 72%
+      ),
+      linear-gradient(
+        180deg,
+        rgb(var(--color-graphite) / 0.34) 0%,
+        rgb(var(--color-carbon) / 0) 42%
+      );
+    contain: strict;
+    isolation: isolate;
+  }
+
+  .laboratory-environment::before,
+  .laboratory-environment::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+  }
+
+  .laboratory-environment::before {
+    background-image:
+      linear-gradient(
+        to right,
+        var(--environment-grid-major-color) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        var(--environment-grid-major-color) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to right,
+        var(--environment-grid-minor-color) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        var(--environment-grid-minor-color) 1px,
+        transparent 1px
+      );
+    background-position: center top;
+    background-size:
+      var(--environment-grid-major) var(--environment-grid-major),
+      var(--environment-grid-major) var(--environment-grid-major),
+      var(--environment-grid-minor) var(--environment-grid-minor),
+      var(--environment-grid-minor) var(--environment-grid-minor);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, rgb(0 0 0 / 0.82) 58%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 0%, rgb(0 0 0 / 0.82) 58%, transparent 100%);
+  }
+
+  .laboratory-environment::after {
+    opacity: var(--environment-grain-opacity);
+    background-image: url("/assets/lab-grain.svg");
+    background-repeat: repeat;
+    background-size: 10rem 10rem;
+    mix-blend-mode: soft-light;
+  }
+
+  .container-canvas,
+  .container-wide,
+  .container-content,
+  .container-editorial,
+  .container-form {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--gutter-page);
+  }
+
+  .container-canvas {
+    max-width: var(--container-canvas);
+  }
+
+  .container-wide {
+    max-width: var(--container-wide);
+  }
+
+  .container-content {
+    max-width: var(--container-content);
+  }
+
+  .container-editorial {
+    max-width: var(--container-editorial);
+  }
+
+  .container-form {
+    max-width: var(--container-form);
+  }
+
+  .measure-body {
+    max-width: var(--measure-body);
   }
 }
 

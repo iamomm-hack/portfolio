@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, Archivo_Black } from "next/font/google";
+import "@fontsource-variable/inter/wght.css";
+import "@fontsource/archivo-black/latin-400.css";
 import "./globals.css";
 import { config } from "@/data/config";
 
 import Header from "@/components/header/header";
 import Footer from "@/components/footer/footer";
 import Script from "next/script";
-import AppOverlays from "@/components/app-overlays";
 import { Providers } from "@/components/providers";
 
 export const metadata: Metadata = {
@@ -40,24 +40,13 @@ export const metadata: Metadata = {
   },
 };
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const archivoBlack = Archivo_Black({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-display",
-});
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={[inter.variable, archivoBlack.variable, "font-display"].join(" ")} suppressHydrationWarning>
+    <html lang="en" className="dark font-sans">
       <head>
         <Script
           defer
@@ -71,7 +60,6 @@ export default function RootLayout({
           <Header />
           {children}
           <Footer />
-          <AppOverlays />
         </Providers>
       </body>
     </html>

@@ -1,9 +1,5 @@
 import type { Config } from "tailwindcss";
 
-const {
-  default: flattenColorPalette,
-} = require("tailwindcss/lib/util/flattenColorPalette");
-
 const config = {
   darkMode: ["class"],
   content: [
@@ -16,56 +12,129 @@ const config = {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "var(--gutter-page)",
       screens: {
-        "2xl": "1400px",
+        "2xl": "1200px",
       },
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)", "sans-serif"],
-        display: ["var(--font-display)", "sans-serif"],
+        sans: ["var(--font-sans)"],
+        display: ["var(--font-display)"],
+        mono: ["var(--font-mono)"],
+      },
+      fontSize: {
+        "display-hero": ["var(--type-display-hero)", { lineHeight: "0.9" }],
+        "display-section": ["var(--type-display-section)", { lineHeight: "0.94" }],
+        "display-project": ["var(--type-display-project)", { lineHeight: "0.96" }],
+        "heading-1": ["var(--type-heading-1)", { lineHeight: "1" }],
+        "heading-2": ["var(--type-heading-2)", { lineHeight: "1.1" }],
+        "heading-3": ["var(--type-heading-3)", { lineHeight: "1.2" }],
+        lead: ["var(--type-lead)", { lineHeight: "1.5" }],
+        body: ["var(--type-body)", { lineHeight: "1.6" }],
+        supporting: ["var(--type-supporting)", { lineHeight: "1.5" }],
+        technical: ["var(--type-technical)", { lineHeight: "1.4" }],
+      },
+      spacing: {
+        "token-1": "var(--space-1)",
+        "token-2": "var(--space-2)",
+        "token-3": "var(--space-3)",
+        "token-4": "var(--space-4)",
+        "token-6": "var(--space-6)",
+        "token-8": "var(--space-8)",
+        "token-12": "var(--space-12)",
+        "token-16": "var(--space-16)",
+        "token-24": "var(--space-24)",
+        "token-36": "var(--space-36)",
+        "token-48": "var(--space-48)",
       },
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        brand: "var(--brand)",
+        carbon: "rgb(var(--color-carbon) / <alpha-value>)",
+        graphite: "rgb(var(--color-graphite) / <alpha-value>)",
+        instrument: "rgb(var(--color-instrument) / <alpha-value>)",
+        elevated: "rgb(var(--color-elevated) / <alpha-value>)",
+        bone: "rgb(var(--color-bone) / <alpha-value>)",
+        "lab-secondary": "rgb(var(--color-secondary) / <alpha-value>)",
+        "lab-muted": "rgb(var(--color-muted) / <alpha-value>)",
+        signal: "rgb(var(--color-signal) / <alpha-value>)",
+        focus: "rgb(var(--color-focus) / <alpha-value>)",
+        error: "rgb(var(--color-error) / <alpha-value>)",
+        warning: "rgb(var(--color-warning) / <alpha-value>)",
+        border: "var(--border-default-color)",
+        divider: "var(--border-divider-color)",
+        input: "var(--border-default-color)",
+        ring: "rgb(var(--color-focus) / <alpha-value>)",
+        background: "rgb(var(--background) / <alpha-value>)",
+        foreground: "rgb(var(--foreground) / <alpha-value>)",
+        brand: "rgb(var(--color-signal) / <alpha-value>)",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "rgb(var(--primary) / <alpha-value>)",
+          foreground: "rgb(var(--primary-foreground) / <alpha-value>)",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "rgb(var(--secondary) / <alpha-value>)",
+          foreground: "rgb(var(--secondary-foreground) / <alpha-value>)",
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "rgb(var(--destructive) / <alpha-value>)",
+          foreground: "rgb(var(--destructive-foreground) / <alpha-value>)",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "rgb(var(--muted) / <alpha-value>)",
+          foreground: "rgb(var(--muted-foreground) / <alpha-value>)",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+          foreground: "rgb(var(--accent-foreground) / <alpha-value>)",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "rgb(var(--popover) / <alpha-value>)",
+          foreground: "rgb(var(--popover-foreground) / <alpha-value>)",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "rgb(var(--card) / <alpha-value>)",
+          foreground: "rgb(var(--card-foreground) / <alpha-value>)",
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        technical: "var(--radius-technical)",
+        control: "var(--radius-control)",
+        panel: "var(--radius-panel)",
+        media: "var(--radius-media)",
+        sm: "var(--radius-technical)",
+        md: "var(--radius-control)",
+        lg: "var(--radius-panel)",
+        xl: "var(--radius-media)",
+      },
+      boxShadow: {
+        sm: "var(--shadow-contact)",
+        md: "var(--shadow-panel)",
+        lg: "var(--shadow-panel)",
+        contact: "var(--shadow-contact)",
+        panel: "var(--shadow-panel)",
+        media: "var(--shadow-media)",
+        instrument: "var(--shadow-instrument)",
+        signal: "var(--shadow-signal)",
+      },
+      maxWidth: {
+        canvas: "var(--container-canvas)",
+        wide: "var(--container-wide)",
+        content: "var(--container-content)",
+        editorial: "var(--container-editorial)",
+        form: "var(--container-form)",
+      },
+      zIndex: {
+        environment: "0",
+        scene: "10",
+        document: "20",
+        sticky: "40",
+        navigation: "50",
+        overlay: "60",
+        dialog: "80",
+        feedback: "90",
+      },
+      backdropBlur: {
+        glass: "var(--blur-glass)",
       },
       keyframes: {
         "accordion-down": {
@@ -83,18 +152,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), addVariablesForColors],
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config;
 
 export default config;
-// This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
-function addVariablesForColors({ addBase, theme }: any) {
-  let allColors = flattenColorPalette(theme("colors"));
-  let newVars = Object.fromEntries(
-    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
-  );
-
-  addBase({
-    ":root": newVars,
-  });
-}

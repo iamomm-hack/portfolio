@@ -11,7 +11,7 @@ export function TypographyH1({
   return (
     <h1
       className={cn(
-        "scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl",
+        "scroll-m-20 font-display text-heading-1 font-normal tracking-tight",
         className
       )}
     >
@@ -29,7 +29,7 @@ export function TypographyH2({
   return (
     <h2
       className={cn(
-        "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0",
+        "scroll-m-20 border-b border-divider pb-2 font-display text-heading-2 font-normal tracking-tight first:mt-0",
         className
       )}
     >
@@ -47,7 +47,7 @@ export function TypographyH3({
   return (
     <h3
       className={cn(
-        "scroll-m-20 text-2xl font-semibold tracking-tight",
+        "scroll-m-20 font-display text-heading-3 font-normal tracking-tight",
         className
       )}
     >
@@ -65,7 +65,7 @@ export function TypographyH4({
   return (
     <h4
       className={cn(
-        "scroll-m-20 text-xl font-semibold tracking-tight",
+        "scroll-m-20 text-lead font-semibold tracking-tight",
         className
       )}
     >
@@ -81,7 +81,7 @@ export function TypographyP({
   className?: string;
 }) {
   return (
-    <p className={cn("leading-7 [&:not(:first-child)]:mt-6", className)}>
+    <p className={cn("measure-body text-body [&:not(:first-child)]:mt-6", className)}>
       {children}
     </p>
   );
@@ -204,7 +204,7 @@ export function TypographyInlineCode({
   return (
     <code
       className={cn(
-        "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
+        "relative rounded-technical bg-muted px-token-2 py-token-1 font-mono text-technical font-semibold",
         className
       )}
     >
@@ -220,7 +220,7 @@ export function TypographyLead({
   className?: string;
 }) {
   return (
-    <p className={cn("text-xl text-muted-foreground", className)}>{children}</p>
+    <p className={cn("measure-body text-lead text-muted-foreground", className)}>{children}</p>
   );
 }
 export function TypographyLarge({
@@ -231,7 +231,7 @@ export function TypographyLarge({
   className?: string;
 }) {
   return (
-    <div className={cn("text-lg font-semibold", className)}>{children}</div>
+    <div className={cn("text-body font-semibold", className)}>{children}</div>
   );
 }
 
@@ -243,7 +243,7 @@ export function TypographySmall({
   className?: string;
 }) {
   return (
-    <small className={cn("text-sm font-medium leading-none", className)}>
+    <small className={cn("text-technical font-medium leading-none", className)}>
       {children}
     </small>
   );
@@ -256,6 +256,6 @@ export function TypographyMuted({
   className?: string;
 }) {
   return (
-    <p className={cn("text-sm text-muted-foreground", className)}>{children}</p>
+    <p className={cn("text-supporting text-muted-foreground", className)}>{children}</p>
   );
 }

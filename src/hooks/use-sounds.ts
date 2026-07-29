@@ -14,12 +14,12 @@ export const useSounds = () => {
         const ctx = new AudioContext();
         audioContextRef.current = ctx;
 
-        const response = await fetch('/assets/keycap-sounds/press.mp3');
+        const response = await fetch("/assets/keycap-sounds/press.mp3");
         const arrayBuffer = await response.arrayBuffer();
         const decodedBuffer = await ctx.decodeAudioData(arrayBuffer);
         pressBufferRef.current = decodedBuffer;
 
-        const releaseResponse = await fetch('/assets/keycap-sounds/release.mp3');
+        const releaseResponse = await fetch("/assets/keycap-sounds/release.mp3");
         const releaseArrayBuffer = await releaseResponse.arrayBuffer();
         const releaseDecodedBuffer = await ctx.decodeAudioData(releaseArrayBuffer);
         releaseBufferRef.current = releaseDecodedBuffer;
@@ -36,7 +36,7 @@ export const useSounds = () => {
   }, []);
 
   const getContext = useCallback(() => {
-    if (audioContextRef.current?.state === 'suspended') {
+    if (audioContextRef.current?.state === "suspended") {
       audioContextRef.current.resume();
     }
     return audioContextRef.current;
@@ -76,8 +76,6 @@ export const useSounds = () => {
 
       const source = ctx.createBufferSource();
       source.buffer = buffer;
-
-      // Add slight variation
       source.detune.value = baseDetune + (Math.random() * 200) - 100;
 
       const gainNode = ctx.createGain();
@@ -85,10 +83,9 @@ export const useSounds = () => {
 
       source.connect(gainNode);
       gainNode.connect(ctx.destination);
-
       source.start(0);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
     }
   }, [getContext]);
 
@@ -100,12 +97,10 @@ export const useSounds = () => {
     playSoundBuffer(releaseBufferRef.current);
   }, [playSoundBuffer]);
 
-  // Send: Clear, slightly higher pitch, quick
   const playSendSound = useCallback(() => {
     playTone(600, 300, 0.25, 0.08);
   }, [playTone]);
 
-  // Receive: Lower pitch, bubble-like, slightly longer
   const playReceiveSound = useCallback(() => {
     playTone(800, 400, 0.35, 0.1);
   }, [playTone]);
