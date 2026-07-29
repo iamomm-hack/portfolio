@@ -89,6 +89,44 @@ const projectsData = await readFile(
   new URL("../src/data/projects.tsx", import.meta.url),
   "utf8",
 );
+const projectRecords = await readFile(
+  new URL("../src/data/project-records.ts", import.meta.url),
+  "utf8",
+);
+const caseStudyPage = await readFile(
+  new URL("../src/app/projects/[slug]/page.tsx", import.meta.url),
+  "utf8",
+);
+const caseStudyLayout = await readFile(
+  new URL(
+    "../src/components/case-study/case-study-layout.tsx",
+    import.meta.url,
+  ),
+  "utf8",
+);
+const caseStudyStyles = await readFile(
+  new URL(
+    "../src/components/case-study/case-study-layout.module.scss",
+    import.meta.url,
+  ),
+  "utf8",
+);
+const contactSection = await readFile(
+  new URL("../src/components/sections/contact.tsx", import.meta.url),
+  "utf8",
+);
+const contactForm = await readFile(
+  new URL("../src/components/ContactForm.tsx", import.meta.url),
+  "utf8",
+);
+const contactStyles = await readFile(
+  new URL("../src/components/sections/contact.module.scss", import.meta.url),
+  "utf8",
+);
+const contactApi = await readFile(
+  new URL("../src/app/api/send/route.ts", import.meta.url),
+  "utf8",
+);
 
 function relativeLuminance([red, green, blue]) {
   const [r, g, b] = [red, green, blue].map((channel) => {
@@ -384,6 +422,59 @@ test("the Projects overview separates three featured systems from the archive", 
     /Modal|FloatingDock|SectionWrapper|SectionHeader|framer-motion|canvas|Spline|gsap/,
   );
   assert.doesNotMatch(projectsStyles, /animation\s*:|transition\s*:/);
-  assert.equal((projectsData.match(/valueProposition:/g) ?? []).length, 7);
-  assert.equal((projectsData.match(/coreTechnologies:/g) ?? []).length, 7);
+  assert.match(projectsData, /PROJECT_RECORDS/);
+  assert.equal((projectRecords.match(/valueProposition:/g) ?? []).length, 7);
+  assert.equal((projectRecords.match(/coreTechnologies:/g) ?? []).length, 7);
+});
+
+test("featured projects share one static case-study architecture", () => {
+  assert.match(caseStudyPage, /FEATURED_PROJECT_IDS\.map/);
+  assert.match(caseStudyPage, /dynamicParams = false/);
+  assert.match(caseStudyPage, /generateStaticParams/);
+  assert.match(caseStudyPage, /notFound\(\)/);
+  assert.equal((caseStudyLayout.match(/<h1\b/g) ?? []).length, 1);
+  assert.match(caseStudyLayout, /aria-label="Breadcrumb"/);
+  assert.match(caseStudyLayout, /aria-label="Case study sections"/);
+  assert.match(caseStudyLayout, /id="overview"/);
+  assert.match(caseStudyLayout, /id="problem"/);
+  assert.match(caseStudyLayout, /id="solution"/);
+  assert.match(caseStudyLayout, /id="architecture"/);
+  assert.match(caseStudyLayout, /id="results"/);
+  assert.match(caseStudyLayout, /id="technology"/);
+  assert.match(caseStudyLayout, /id="links"/);
+  assert.match(caseStudyLayout, /data-editorial-placeholder="true"/);
+  assert.match(caseStudyLayout, /project\.coreTechnologies\.map/);
+  assert.match(caseStudyLayout, /opens in a new tab/);
+  assert.doesNotMatch(
+    `${caseStudyPage}\n${caseStudyLayout}`,
+    /use client|framer-motion|gsap|requestAnimationFrame|canvas|Spline/,
+  );
+  assert.doesNotMatch(caseStudyStyles, /animation\s*:|transition\s*:/);
+  assert.match(caseStudyStyles, /prefers-reduced-motion: reduce/);
+});
+
+test("the Contact finale preserves the email flow with accessible feedback", () => {
+  assert.equal((contactSection.match(/<h2\b/g) ?? []).length, 1);
+  assert.match(contactSection, /aria-labelledby="contact-title"/);
+  assert.match(contactSection, /Direct channels/);
+  assert.match(contactSection, /Project inquiry/);
+  assert.match(contactSection, /closingMetadata/);
+  assert.match(contactForm, /fetch\("\/api\/send"/);
+  assert.match(contactForm, /JSON\.stringify\(\{[\s\S]*fullName,[\s\S]*email,[\s\S]*message/);
+  assert.match(contactForm, /htmlFor="contact-full-name"/);
+  assert.match(contactForm, /name="fullName"/);
+  assert.match(contactForm, /type="email"/);
+  assert.match(contactForm, /name="message"/);
+  assert.match(contactForm, /minLength=\{10\}/);
+  assert.match(contactForm, /role=\{submissionState === "error" \? "alert" : "status"\}/);
+  assert.match(contactForm, /aria-live=/);
+  assert.match(contactForm, /<noscript>/);
+  assert.doesNotMatch(
+    `${contactSection}\n${contactForm}`,
+    /SectionWrapper|SectionHeader|framer-motion|useToast|useRouter|setTimeout/,
+  );
+  assert.doesNotMatch(contactStyles, /animation\s*:|transition\s*:/);
+  assert.match(contactStyles, /prefers-reduced-motion: reduce/);
+  assert.match(contactApi, /Email\.safeParse\(body\)/);
+  assert.match(contactApi, /resend\.emails\.send/);
 });

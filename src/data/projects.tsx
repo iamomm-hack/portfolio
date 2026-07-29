@@ -18,6 +18,7 @@ import {
   SiDocker,
 } from "react-icons/si";
 import { TbBrandFramerMotion } from "react-icons/tb";
+import { PROJECT_RECORDS, type ProjectRecord } from "./project-records";
 const BASE_PATH = "/assets/projects-screenshots";
 
 const ProjectsLinks = ({ live, repo }: { live: string; repo?: string }) => {
@@ -247,35 +248,16 @@ const PROJECT_SKILLS = {
   },
 };
 
-export type Project = {
-  id: string;
-  category: string;
-  title: string;
-  valueProposition: string;
-  year: string;
-  status: string;
-  coreTechnologies: string[];
-  src: string;
+export type Project = ProjectRecord & {
   screenshots: string[];
   skills: { frontend: Skill[]; backend: Skill[] };
   content: React.ReactNode | any;
-  github?: string;
-  live: string;
 };
 
 const projects: Project[] = [
   {
-    id: "stellarid",
-    category: "Web3",
-    title: "StellarID",
-    valueProposition: "Privacy-first identity proofs that verify credentials without exposing personal data.",
-    year: "2026",
-    status: "Live prototype",
-    coreTechnologies: ["Next.js", "TypeScript", "Stellar", "Soroban", "Zero-Knowledge"],
-    src: `${BASE_PATH}/stellarid/landing.png`,
+    ...PROJECT_RECORDS.stellarid,
     screenshots: ["landing.png", "use-cases.png", "protocol.png", "dashboard.png", "docs.png"],
-    live: "https://stellarid-id.vercel.app/",
-    github: "https://github.com/iamomm-hack/StellarID",
     skills: {
       frontend: [
         PROJECT_SKILLS.next,
@@ -328,17 +310,8 @@ const projects: Project[] = [
     },
   },
   {
-    id: "chatmint-ai",
-    category: "Web3",
-    title: "ChatMint AI",
-    valueProposition: "An intelligent studio that turns AI-developed ideas into registered on-chain IP assets.",
-    year: "2026",
-    status: "Live prototype",
-    coreTechnologies: ["Next.js", "TypeScript", "Gemini AI", "Story Protocol", "IPFS"],
-    src: `${BASE_PATH}/chatmint-ai/landing.png`,
+    ...PROJECT_RECORDS["chatmint-ai"],
     screenshots: ["landing.png", "idea-chat-studio.png", "visual-ip.png", "register.png"],
-    live: "https://chat-mint-ai.vercel.app/",
-    github: "https://github.com/iamomm-hack/ChatMint-AI",
     skills: {
       frontend: [
         PROJECT_SKILLS.ts,
@@ -390,17 +363,8 @@ const projects: Project[] = [
     },
   },
   {
-    id: "stellartipjar",
-    category: "Web3",
-    title: "StellarTipJar",
-    valueProposition: "Wallet-native creator tipping with instant Stellar payments, analytics, and reporting.",
-    year: "2026",
-    status: "Live prototype",
-    coreTechnologies: ["React", "Vite", "Stellar"],
-    src: `${BASE_PATH}/stellartipjar/landing.png`,
+    ...PROJECT_RECORDS.stellartipjar,
     screenshots: ["landing.png", "send_tip.png", "analytics.png", "history.png"],
-    live: "https://stellar-tip-jar.vercel.app/",
-    github: "https://github.com/iamomm-hack/StellarTipJar",
     skills: {
       frontend: [
         PROJECT_SKILLS.react,
@@ -446,17 +410,8 @@ const projects: Project[] = [
     },
   },
   {
-    id: "trustmarket-dex",
-    category: "Web3",
-    title: "TrustMarket DEX",
-    valueProposition: "Peer-to-peer trade secured by automated escrow, reputation, and community arbitration.",
-    year: "2026",
-    status: "Live prototype",
-    coreTechnologies: ["Next.js", "TypeScript", "Rust", "Soroban", "Stellar"],
-    src: `${BASE_PATH}/trustmarket-dex/landing.png`,
+    ...PROJECT_RECORDS["trustmarket-dex"],
     screenshots: ["landing.png", "dashboard.png", "create-trade.png", "stake.png", "docs.png"],
-    live: "https://trustmarket-dex.vercel.app/",
-    github: "https://github.com/iamomm-hack/TrustMarket-DEX",
     skills: {
       frontend: [
         PROJECT_SKILLS.ts,
@@ -511,17 +466,8 @@ const projects: Project[] = [
     },
   },
   {
-    id: "quantx",
-    category: "Web3",
-    title: "QuantX",
-    valueProposition: "Non-custodial infrastructure for automating recurring payments across Web3 products.",
-    year: "2026",
-    status: "Live prototype",
-    coreTechnologies: ["Next.js", "TypeScript", "Rust", "Soroban", "Node.js"],
-    src: `${BASE_PATH}/quantx/landing.png`,
+    ...PROJECT_RECORDS.quantx,
     screenshots: ["landing.png", "dashboard.png", "plans.png", "stream.png"],
-    live: "https://quantx-web.vercel.app/",
-    github: "https://github.com/iamomm-hack/QuantX",
     skills: {
       frontend: [
         PROJECT_SKILLS.ts,
@@ -578,17 +524,8 @@ const projects: Project[] = [
     },
   },
   {
-    id: "revealx",
-    category: "Web3",
-    title: "RevealX",
-    valueProposition: "A time-locked prediction network where audiences stake and outcomes resolve on-chain.",
-    year: "2026",
-    status: "Source available",
-    coreTechnologies: ["Next.js", "TypeScript", "Solidity", "Ethereum", "IPFS"],
-    src: `${BASE_PATH}/revealx/landing.png`,
+    ...PROJECT_RECORDS.revealx,
     screenshots: ["landing.png", "create.png", "leaderboard.png", "profile.png"],
-    live: "",
-    github: "https://github.com/iamomm-hack/RevealX",
     skills: {
       frontend: [
         PROJECT_SKILLS.ts,
