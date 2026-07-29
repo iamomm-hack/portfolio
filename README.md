@@ -2,7 +2,7 @@
 
 A dark editorial portfolio built as an engineering laboratory rather than a traditional résumé. The experience combines a resilient static content layer with a progressively loaded Spline keyboard, focused motion, accessible navigation, case-study foundations, and a compact seven-project gallery.
 
-[View the live portfolio](https://omdotcmd.vercel.app)
+[View the live portfolio](https://iamom.tech)
 
 ## Experience
 
