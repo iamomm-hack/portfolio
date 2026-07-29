@@ -1,25 +1,204 @@
-.nav {
-  overflow: hidden;
-
-  .wrapper {
-    position: relative;
-    display: flex;
-    gap: 50px;
-    margin-bottom: 12px; // prev 80px
-  }
-
-  .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
+.dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  padding: max(var(--space-3), env(safe-area-inset-top))
+    max(var(--gutter-page), env(safe-area-inset-right))
+    max(var(--space-6), env(safe-area-inset-bottom))
+    max(var(--gutter-page), env(safe-area-inset-left));
+  margin: 0;
+  overflow: auto;
+  color: rgb(var(--color-bone));
+  background: rgb(var(--color-carbon) / 0.97);
+  border: 0;
+  pointer-events: auto;
 }
 
-@media only screen and (min-width: 1000px) {
-  .nav {
-    .wrapper {
-      margin-bottom: 0px;
-      justify-content: space-between;
-    }
+.dialog::backdrop {
+  background: rgb(var(--color-carbon) / 0.82);
+}
+
+.dialogRail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(7rem, auto) auto;
+  align-items: center;
+  width: 100%;
+  max-width: var(--container-canvas);
+  min-height: 3.25rem;
+  margin-inline: auto;
+  overflow: hidden;
+  background: rgb(var(--color-instrument) / 0.88);
+  border: var(--border-default);
+  border-radius: var(--radius-control);
+  box-shadow: var(--shadow-panel);
+}
+
+.dialogIdentity,
+.dialogChapter,
+.closeButton {
+  min-width: 0;
+  min-height: 2.75rem;
+}
+
+.dialogIdentity,
+.dialogChapter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-inline: var(--space-4);
+}
+
+.dialogChapter {
+  justify-content: center;
+  border-inline: var(--border-divider);
+}
+
+.railLabel,
+.eyebrow,
+.linkIndex,
+.linkStatus {
+  color: rgb(var(--color-muted));
+  font-family: var(--font-mono);
+  font-size: var(--type-technical);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.railValue {
+  overflow: hidden;
+  font-size: var(--type-supporting);
+  line-height: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.closeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-width: 6rem;
+  padding-inline: var(--space-4);
+  color: rgb(var(--color-bone));
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.closeGlyph {
+  position: relative;
+  display: block;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.closeGlyph::before,
+.closeGlyph::after {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  content: "";
+  background: currentColor;
+}
+
+.closeGlyph::before {
+  transform: rotate(45deg);
+}
+
+.closeGlyph::after {
+  transform: rotate(-45deg);
+}
+
+.navigationFrame {
+  width: 100%;
+  max-width: var(--container-content);
+  margin: var(--space-24) auto 0;
+}
+
+.title {
+  max-width: 14ch;
+  margin-top: var(--space-4);
+  font-family: var(--font-display);
+  font-size: var(--type-heading-1);
+  line-height: 1;
+}
+
+.navigation {
+  margin-top: var(--space-12);
+  border-top: var(--border-divider);
+}
+
+.navigation ol {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.navigation li {
+  border-bottom: var(--border-divider);
+}
+
+.navigation a {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  min-height: 4.5rem;
+  padding-block: var(--space-3);
+  color: rgb(var(--color-secondary));
+  text-decoration: none;
+}
+
+.navigation a[aria-current="page"] {
+  color: rgb(var(--color-bone));
+}
+
+.navigation a[aria-current="page"] .linkStatus {
+  color: rgb(var(--color-signal));
+}
+
+@media (max-width: 40rem) {
+  .dialogRail {
+    grid-template-columns: minmax(0, 1fr) minmax(5.5rem, auto) 3.5rem;
+  }
+
+  .dialogIdentity,
+  .dialogChapter {
+    padding-inline: var(--space-3);
+  }
+
+  .railLabel,
+  .closeButton > span:first-child {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .closeButton {
+    min-width: 2.75rem;
+    padding: 0;
+  }
+
+  .navigationFrame {
+    margin-top: var(--space-16);
+  }
+
+  .navigation a {
+    grid-template-columns: 2rem minmax(0, 1fr);
+  }
+
+  .linkStatus {
+    display: none;
   }
 }

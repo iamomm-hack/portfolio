@@ -1,46 +1,16 @@
-import { Link } from "@/types";
+export type NavigationLink = {
+  title: string;
+  href: string;
+  target?: string;
+};
 
-const links: Link[] = [
-  {
-    title: 'Home',
-    href: '/',
-    thumbnail: '/assets/nav-link-previews/landing.png'
-  },
-  {
-    title: 'About',
-    href: '/#about',
-    thumbnail: '/assets/nav-link-previews/about.png'
-  },
-  {
-    title: 'Skills',
-    href: '/#skills',
-    thumbnail: '/assets/nav-link-previews/skills.png'
-  },
-  {
-    title: 'Projects',
-    href: '/#projects',
-    thumbnail: '/assets/nav-link-previews/projects.png'
-  },
-  // {
-  //   title: 'Skills',
-  //   href: '/skills',
-  //   thumbnail: '/assets/nav-link-previews/skills.png'
-  // },
-  // {
-  //   title: 'Testimonials',
-  //   href: '/testimonials',
-  //   thumbnail: '/assets/nav-link-previews/testimonials.png'
-  // },
-  {
-    title: 'Blogs',
-    href: '/blogs',
-    thumbnail: '/assets/nav-link-previews/blog.png',
-  },
-  {
-    title: 'Contact',
-    href: '/#contact',
-    thumbnail: '/assets/nav-link-previews/contact.png'
-  }
+const links: NavigationLink[] = [
+  { title: "Home", href: "/" },
+  { title: "About", href: "/#about" },
+  { title: "Skills", href: "/#skills" },
+  { title: "Projects", href: "/#projects" },
+  { title: "Blogs", href: "/blogs" },
+  { title: "Contact", href: "/#contact" },
 ];
 
 export { links };

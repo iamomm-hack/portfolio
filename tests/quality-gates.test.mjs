@@ -29,6 +29,22 @@ const grainTexture = await readFile(
   new URL("../public/assets/lab-grain.svg", import.meta.url),
   "utf8",
 );
+const controlRail = await readFile(
+  new URL("../src/components/header/header.tsx", import.meta.url),
+  "utf8",
+);
+const expandedNavigation = await readFile(
+  new URL("../src/components/header/nav/index.tsx", import.meta.url),
+  "utf8",
+);
+const controlRailStyles = await readFile(
+  new URL("../src/components/header/style.module.scss", import.meta.url),
+  "utf8",
+);
+const navigationStyles = await readFile(
+  new URL("../src/components/header/nav/style.module.scss", import.meta.url),
+  "utf8",
+);
 
 function relativeLuminance([red, green, blue]) {
   const [r, g, b] = [red, green, blue].map((channel) => {
@@ -186,4 +202,43 @@ test("the carbon environment preserves AA text contrast", () => {
 
   assert.ok(contrastRatio(bone, carbon) >= 4.5);
   assert.ok(contrastRatio(secondary, carbon) >= 4.5);
+});
+
+test("the laboratory control rail preserves accessible navigation contracts", () => {
+  assert.match(controlRail, /<header/);
+  assert.match(controlRail, /aria-expanded=\{isActive\}/);
+  assert.match(controlRail, /aria-controls="primary-navigation-dialog"/);
+  assert.match(controlRail, /dialog\.showModal\(\)/);
+  assert.match(controlRail, /event\.key === "Escape"/);
+  assert.match(controlRail, /removeEventListener\("keydown", handleEscape\)/);
+  assert.match(controlRail, /triggerRef\.current\?\.focus\(\)/);
+  assert.match(expandedNavigation, /<dialog/);
+  assert.match(expandedNavigation, /onCancel=\{handleCancel\}/);
+  assert.match(expandedNavigation, /<nav aria-label="Primary navigation"/);
+  assert.match(expandedNavigation, /aria-current=/);
+  assert.match(controlRailStyles, /env\(safe-area-inset-top\)/);
+  assert.match(navigationStyles, /env\(safe-area-inset-bottom\)/);
+  assert.match(controlRailStyles, /min-height:\s*2\.75rem/);
+  assert.match(navigationStyles, /min-height:\s*2\.75rem/);
+});
+
+test("the control rail has no preview or continuous input runtime", async () => {
+  const removedNavigationFiles = [
+    "../src/components/header/nav/body/body.tsx",
+    "../src/components/header/nav/image/image.tsx",
+    "../src/components/header/nav/footer/footer.tsx",
+  ];
+
+  await Promise.all(
+    removedNavigationFiles.map((file) =>
+      assert.rejects(access(new URL(file, import.meta.url))),
+    ),
+  );
+
+  const navigationRuntime = `${controlRail}\n${expandedNavigation}`;
+  assert.doesNotMatch(navigationRuntime, /thumbnail|framer-motion/);
+  assert.doesNotMatch(
+    navigationRuntime,
+    /requestAnimationFrame|ResizeObserver|pointermove|mousemove/,
+  );
 });

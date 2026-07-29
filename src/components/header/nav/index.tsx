@@ -1,55 +1,103 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import styles from "./style.module.scss";
-import { height } from "../anim";
-import Body from "./body/body";
-import Footer from "./footer/footer";
-import Image from "./image/image";
+import Link from "next/link";
+import { forwardRef, type SyntheticEvent } from "react";
 
+import { config } from "@/data/config";
 import { links } from "@/components/header/config";
-import { cn } from "@/lib/utils";
+import styles from "./style.module.scss";
 
-interface IndexProps {
-  setIsActive: (isActive: boolean) => void;
+interface NavProps {
+  currentChapter: string;
+  onCancel: () => void;
+  onClose: () => void;
+  onNavigate: () => void;
+  onRequestClose: () => void;
 }
 
-interface SelectedLinkState {
-  isActive: boolean;
-  index: number;
-}
+const Nav = forwardRef<HTMLDialogElement, NavProps>(
+  (
+    {
+      currentChapter,
+      onCancel,
+      onClose,
+      onNavigate,
+      onRequestClose,
+    },
+    ref,
+  ) => {
+    const handleCancel = (event: SyntheticEvent<HTMLDialogElement>) => {
+      event.preventDefault();
+      onCancel();
+    };
 
-const Index: React.FC<IndexProps> = ({ setIsActive }) => {
-  const [selectedLink, setSelectedLink] = useState<SelectedLinkState>({
-    isActive: false,
-    index: 0,
-  });
-
-  return (
-    <motion.div
-      variants={height}
-      initial="initial"
-      animate="enter"
-      exit="exit"
-      className={styles.nav}
-    >
-      <div className={cn(styles.wrapper, 'flex justify-end sm:justify-start')}>
-        <div className={styles.container}>
-          <Body
-            links={links}
-            selectedLink={selectedLink}
-            setSelectedLink={setSelectedLink}
-            setIsActive={setIsActive}
-          />
-          {/* <Footer /> */}
+    return (
+      <dialog
+        ref={ref}
+        id="primary-navigation-dialog"
+        className={styles.dialog}
+        aria-labelledby="primary-navigation-title"
+        onCancel={handleCancel}
+        onClose={onClose}
+      >
+        <div className={styles.dialogRail}>
+          <div className={styles.dialogIdentity}>
+            <span className={styles.railLabel}>Identity</span>
+            <span className={styles.railValue}>{config.author}</span>
+          </div>
+          <div className={styles.dialogChapter}>
+            <span className={styles.railLabel}>Chapter</span>
+            <span className={styles.railValue}>{currentChapter}</span>
+          </div>
+          <button
+            type="button"
+            className={styles.closeButton}
+            data-navigation-close
+            onClick={onRequestClose}
+          >
+            <span>Close</span>
+            <span className={styles.closeGlyph} aria-hidden="true" />
+          </button>
         </div>
-        <Image
-          src={links[selectedLink.index].thumbnail}
-          isActive={selectedLink.isActive}
-        />
-        {/* <p>{links[selectedLink.index].thumbnail}</p> */}
-      </div>
-    </motion.div>
-  );
-};
 
-export default Index;
+        <div className={styles.navigationFrame}>
+          <p className={styles.eyebrow}>Directory / Primary</p>
+          <h2 id="primary-navigation-title" className={styles.title}>
+            Navigate the laboratory
+          </h2>
+
+          <nav aria-label="Primary navigation" className={styles.navigation}>
+            <ol>
+              {links.map((link, index) => {
+                const isCurrent =
+                  currentChapter === link.title ||
+                  (currentChapter === "Landing" && link.title === "Home");
+
+                return (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      target={link.target}
+                      aria-current={isCurrent ? "page" : undefined}
+                      onClick={onNavigate}
+                    >
+                      <span className={styles.linkIndex} aria-hidden="true">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span>{link.title}</span>
+                      <span className={styles.linkStatus} aria-hidden="true">
+                        {isCurrent ? "Active" : "Open"}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ol>
+          </nav>
+        </div>
+      </dialog>
+    );
+  },
+);
+
+Nav.displayName = "Nav";
+
+export default Nav;
