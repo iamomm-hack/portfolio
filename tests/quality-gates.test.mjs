@@ -455,9 +455,17 @@ test("the Projects overview separates three interactive featured systems from th
     projectsSection,
     /Modal|FloatingDock|SectionWrapper|SectionHeader|framer-motion|canvas|Spline/,
   );
-  assert.match(projectsStyles, /aspect-ratio:\s*16 \/ 10/);
+  assert.match(projectsStyles, /max-width:\s*1500px/);
+  assert.match(projectsStyles, /grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(projectsStyles, /gap:\s*40px/);
+  assert.match(projectsStyles, /aspect-ratio:\s*16 \/ 9/);
+  assert.match(projectsStyles, /font-size:\s*56px/);
+  assert.match(projectsStyles, /font-size:\s*42px/);
+  assert.match(projectsStyles, /font-size:\s*34px/);
+  assert.match(projectsStyles, /@media \(max-width: 959px\)/);
   assert.match(projectsStyles, /prefers-reduced-motion:\s*reduce/);
   assert.doesNotMatch(projectsStyles, /animation\s*:/);
+  assert.doesNotMatch(projectsStyles, /transition(?:-property)?\s*:/);
   assert.doesNotMatch(
     projectsStyles,
     /transition(?:-property)?\s*:[^;]*(?:all|background|border|box-shadow|filter|width|height)/,
@@ -465,11 +473,13 @@ test("the Projects overview separates three interactive featured systems from th
   assert.match(projectsChoreography, /ScrollTrigger/);
   assert.match(projectsChoreography, /gsap\.timeline/);
   assert.match(projectsChoreography, /gsap\.quickTo/);
+  assert.match(projectsChoreography, /PROJECT_HOVER_DURATION = 0\.3/);
+  assert.match(projectsChoreography, /scale: isActive \? 1\.05 : 1/);
   assert.match(projectsChoreography, /prefers-reduced-motion: reduce/);
   assert.match(projectsChoreography, /pointerenter/);
   assert.doesNotMatch(
     projectsChoreography,
-    /requestAnimationFrame|setInterval|canvas|Spline|filter|scale/,
+    /requestAnimationFrame|setInterval|canvas|Spline|filter\s*:|elastic|bounce/,
   );
   assert.match(projectsSection, /@\/data\/project-records/);
   assert.doesNotMatch(projectsSection, /@\/data\/projects/);
