@@ -85,10 +85,6 @@ const projectsStyles = await readFile(
   new URL("../src/components/sections/projects.module.scss", import.meta.url),
   "utf8",
 );
-const projectsChoreography = await readFile(
-  new URL("../src/components/sections/projects-choreography.ts", import.meta.url),
-  "utf8",
-);
 const projectRecords = await readFile(
   new URL("../src/data/project-records.ts", import.meta.url),
   "utf8",
@@ -433,11 +429,11 @@ test("the Experience narrative is a static semantic record of outcomes", () => {
   assert.doesNotMatch(experienceStyles, /animation\s*:|transition\s*:/);
 });
 
-test("the Projects overview is one compact six-project gallery", () => {
+test("the Projects overview is one compact seven-project gallery", () => {
   assert.equal((projectsSection.match(/<h2\b/g) ?? []).length, 1);
   assert.match(projectsSection, /aria-labelledby="projects-title"/);
   assert.match(projectsSection, /projects\.map/);
-  assert.match(projectsSection, /aria-label="Project gallery"/);
+  assert.match(projectsSection, /aria-label="Featured projects"/);
   assert.match(projectsSection, /tabIndex=\{0\}/);
   assert.match(projectsSection, /project\.valueProposition/);
   assert.match(projectsSection, /data-project-card/);
@@ -447,21 +443,21 @@ test("the Projects overview is one compact six-project gallery", () => {
   assert.match(projectsSection, /Open \$\{project\.title\} GitHub repository in a new tab/);
   assert.doesNotMatch(
     projectsSection,
-    /FEATURED_PROJECT_COUNT|Featured projects|Project archive|record count|project\.year|project\.status|project\.coreTechnologies|data-case-study-path/,
+    /FEATURED_PROJECT_COUNT|Project archive|record count|project\.year|project\.status|project\.coreTechnologies|data-case-study-path/,
   );
   assert.doesNotMatch(
     projectsSection,
-    /Modal|FloatingDock|SectionWrapper|SectionHeader|framer-motion|canvas|Spline/,
+    /Modal|FloatingDock|SectionWrapper|SectionHeader|canvas|Spline|gsap/,
   );
   assert.match(projectsStyles, /max-width:\s*1400px/);
-  assert.match(projectsStyles, /grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(projectsStyles, /grid-template-columns:\s*repeat\(2, minmax\(0, 620px\)\)/);
   assert.match(projectsStyles, /gap:\s*32px/);
   assert.match(projectsStyles, /aspect-ratio:\s*16 \/ 9/);
   assert.match(projectsStyles, /max-width:\s*568px/);
   assert.match(projectsStyles, /max-height:\s*320px/);
   assert.match(projectsStyles, /border-radius:\s*18px/);
   assert.match(projectsStyles, /-webkit-line-clamp:\s*2/);
-  assert.match(projectsStyles, /@media \(max-width: 959px\)/);
+  assert.match(projectsStyles, /@media \(max-width: 700px\)/);
   assert.match(projectsStyles, /prefers-reduced-motion:\s*reduce/);
   assert.doesNotMatch(projectsStyles, /animation\s*:/);
   assert.doesNotMatch(projectsStyles, /transition(?:-property)?\s*:/);
@@ -469,22 +465,21 @@ test("the Projects overview is one compact six-project gallery", () => {
     projectsStyles,
     /transition(?:-property)?\s*:[^;]*(?:all|background|border|box-shadow|filter|width|height)/,
   );
-  assert.match(projectsChoreography, /ScrollTrigger/);
-  assert.match(projectsChoreography, /gsap\.timeline/);
-  assert.match(projectsChoreography, /gsap\.quickTo/);
-  assert.match(projectsChoreography, /PROJECT_HOVER_DURATION = 0\.3/);
-  assert.match(projectsChoreography, /scale: isActive \? 1\.04 : 1/);
-  assert.match(projectsChoreography, /y: isActive \? -6 : 0/);
-  assert.match(projectsChoreography, /prefers-reduced-motion: reduce/);
-  assert.match(projectsChoreography, /pointerenter/);
+  assert.match(projectsSection, /framer-motion/);
+  assert.match(projectsSection, /whileHover="hover"/);
+  assert.match(projectsSection, /whileFocus="hover"/);
+  assert.match(projectsSection, /whileInView/);
+  assert.match(projectsSection, /duration: reducedMotion \? 0 : 0\.35/);
+  assert.match(projectsSection, /scale: reducedMotion \? 1 : 1\.04/);
+  assert.match(projectsSection, /y: reducedMotion \? 0 : -8/);
   assert.doesNotMatch(
-    projectsChoreography,
+    projectsSection,
     /requestAnimationFrame|setInterval|canvas|Spline|filter\s*:|elastic|bounce/,
   );
   assert.match(projectsSection, /@\/data\/project-records/);
   assert.doesNotMatch(projectsSection, /@\/data\/projects/);
-  assert.equal((projectRecords.match(/valueProposition:/g) ?? []).length, 7);
-  assert.equal((projectRecords.match(/coreTechnologies:/g) ?? []).length, 7);
+  assert.equal((projectRecords.match(/valueProposition:/g) ?? []).length, 8);
+  assert.equal((projectRecords.match(/coreTechnologies:/g) ?? []).length, 8);
 });
 
 test("featured projects share one static case-study architecture", () => {
