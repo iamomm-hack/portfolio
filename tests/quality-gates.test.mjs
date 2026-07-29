@@ -85,6 +85,10 @@ const projectsStyles = await readFile(
   new URL("../src/components/sections/projects.module.scss", import.meta.url),
   "utf8",
 );
+const projectsChoreography = await readFile(
+  new URL("../src/components/sections/projects-choreography.ts", import.meta.url),
+  "utf8",
+);
 const projectRecords = await readFile(
   new URL("../src/data/project-records.ts", import.meta.url),
   "utf8",
@@ -429,7 +433,7 @@ test("the Experience narrative is a static semantic record of outcomes", () => {
   assert.doesNotMatch(experienceStyles, /animation\s*:|transition\s*:/);
 });
 
-test("the Projects overview separates three featured systems from the archive", () => {
+test("the Projects overview separates three interactive featured systems from the archive", () => {
   assert.equal((projectsSection.match(/<h2\b/g) ?? []).length, 1);
   assert.match(projectsSection, /aria-labelledby="projects-title"/);
   assert.match(projectsSection, /const FEATURED_PROJECT_COUNT = 3/);
@@ -442,11 +446,31 @@ test("the Projects overview separates three featured systems from the archive", 
   assert.match(projectsSection, /project\.status/);
   assert.match(projectsSection, /project\.coreTechnologies/);
   assert.match(projectsSection, /data-case-study-path/);
+  assert.match(projectsSection, /data-project-card/);
+  assert.match(projectsSection, /data-project-media/);
+  assert.match(projectsSection, /next\/image/);
+  assert.match(projectsSection, /Open \$\{title\} live demo in a new tab/);
+  assert.match(projectsSection, /Open \$\{title\} GitHub repository in a new tab/);
   assert.doesNotMatch(
     projectsSection,
-    /Modal|FloatingDock|SectionWrapper|SectionHeader|framer-motion|canvas|Spline|gsap/,
+    /Modal|FloatingDock|SectionWrapper|SectionHeader|framer-motion|canvas|Spline/,
   );
-  assert.doesNotMatch(projectsStyles, /animation\s*:|transition\s*:/);
+  assert.match(projectsStyles, /aspect-ratio:\s*16 \/ 10/);
+  assert.match(projectsStyles, /prefers-reduced-motion:\s*reduce/);
+  assert.doesNotMatch(projectsStyles, /animation\s*:/);
+  assert.doesNotMatch(
+    projectsStyles,
+    /transition(?:-property)?\s*:[^;]*(?:all|background|border|box-shadow|filter|width|height)/,
+  );
+  assert.match(projectsChoreography, /ScrollTrigger/);
+  assert.match(projectsChoreography, /gsap\.timeline/);
+  assert.match(projectsChoreography, /gsap\.quickTo/);
+  assert.match(projectsChoreography, /prefers-reduced-motion: reduce/);
+  assert.match(projectsChoreography, /pointerenter/);
+  assert.doesNotMatch(
+    projectsChoreography,
+    /requestAnimationFrame|setInterval|canvas|Spline|filter|scale/,
+  );
   assert.match(projectsSection, /@\/data\/project-records/);
   assert.doesNotMatch(projectsSection, /@\/data\/projects/);
   assert.equal((projectRecords.match(/valueProposition:/g) ?? []).length, 7);
