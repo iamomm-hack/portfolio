@@ -34,7 +34,7 @@ const HeroSection = () => {
       <div className={styles.layout}>
         <div className={styles.content} data-hero-motion="content">
           <p className={styles.eyebrow} data-hero-motion="eyebrow">
-            Independent engineering practice
+            Building next-gen digital experiences
           </p>
 
           <h1 id="hero-title" className={styles.title} data-hero-motion="title">
