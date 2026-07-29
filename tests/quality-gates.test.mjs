@@ -77,6 +77,18 @@ const experienceStyles = await readFile(
   new URL("../src/components/sections/experience.module.scss", import.meta.url),
   "utf8",
 );
+const projectsSection = await readFile(
+  new URL("../src/components/sections/projects.tsx", import.meta.url),
+  "utf8",
+);
+const projectsStyles = await readFile(
+  new URL("../src/components/sections/projects.module.scss", import.meta.url),
+  "utf8",
+);
+const projectsData = await readFile(
+  new URL("../src/data/projects.tsx", import.meta.url),
+  "utf8",
+);
 
 function relativeLuminance([red, green, blue]) {
   const [r, g, b] = [red, green, blue].map((channel) => {
@@ -352,4 +364,26 @@ test("the Experience narrative is a static semantic record of outcomes", () => {
     /framer-motion|SectionWrapper|SectionHeader|canvas|Spline|gsap/,
   );
   assert.doesNotMatch(experienceStyles, /animation\s*:|transition\s*:/);
+});
+
+test("the Projects overview separates three featured systems from the archive", () => {
+  assert.equal((projectsSection.match(/<h2\b/g) ?? []).length, 1);
+  assert.match(projectsSection, /aria-labelledby="projects-title"/);
+  assert.match(projectsSection, /const FEATURED_PROJECT_COUNT = 3/);
+  assert.match(projectsSection, /projects\.slice\(0, FEATURED_PROJECT_COUNT\)/);
+  assert.match(projectsSection, /projects\.slice\(FEATURED_PROJECT_COUNT\)/);
+  assert.match(projectsSection, /Featured projects/);
+  assert.match(projectsSection, /Project archive/);
+  assert.match(projectsSection, /project\.valueProposition/);
+  assert.match(projectsSection, /project\.year/);
+  assert.match(projectsSection, /project\.status/);
+  assert.match(projectsSection, /project\.coreTechnologies/);
+  assert.match(projectsSection, /data-case-study-path/);
+  assert.doesNotMatch(
+    projectsSection,
+    /Modal|FloatingDock|SectionWrapper|SectionHeader|framer-motion|canvas|Spline|gsap/,
+  );
+  assert.doesNotMatch(projectsStyles, /animation\s*:|transition\s*:/);
+  assert.equal((projectsData.match(/valueProposition:/g) ?? []).length, 7);
+  assert.equal((projectsData.match(/coreTechnologies:/g) ?? []).length, 7);
 });
