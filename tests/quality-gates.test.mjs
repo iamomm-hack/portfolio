@@ -127,6 +127,10 @@ const contactApi = await readFile(
   new URL("../src/app/api/send/route.ts", import.meta.url),
   "utf8",
 );
+const footer = await readFile(
+  new URL("../src/components/footer/footer.tsx", import.meta.url),
+  "utf8",
+);
 
 function relativeLuminance([red, green, blue]) {
   const [r, g, b] = [red, green, blue].map((channel) => {
@@ -477,4 +481,18 @@ test("the Contact finale preserves the email flow with accessible feedback", () 
   assert.match(contactStyles, /prefers-reduced-motion: reduce/);
   assert.match(contactApi, /Email\.safeParse\(body\)/);
   assert.match(contactApi, /resend\.emails\.send/);
+});
+
+test("the global polish pass preserves the frozen editorial rhythm", () => {
+  assert.match(
+    contactStyles,
+    /padding:\s*var\(--space-24\) var\(--gutter-page\)/,
+  );
+  assert.match(contactStyles, /@media \(max-width: 56rem\)/);
+  assert.match(contactStyles, /overflow-wrap:\s*anywhere/);
+  assert.match(footer, /px-\[var\(--gutter-page\)\]/);
+  assert.doesNotMatch(
+    `${contactStyles}\n${footer}`,
+    /animation\s*:|transition\s*:|framer-motion|requestAnimationFrame/,
+  );
 });
