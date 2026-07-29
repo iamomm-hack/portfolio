@@ -246,9 +246,9 @@ export const EXPERIENCE: Experience[] = [
     title: "Developer Advocate",
     company: "HackQuest",
     description: [
-      "Advocating for developer tools and fostering community engagement across platforms.",
-      "Creating technical content, tutorials, and documentation to onboard new developers.",
-      "Organizing and participating in hackathons, workshops, and developer meetups.",
+      "Expanded access to developer tools through practical advocacy across community platforms.",
+      "Created reusable technical learning paths that help new developers move from discovery to contribution.",
+      "Strengthened hands-on participation through hackathons, workshops, and developer meetups.",
     ],
     skills: [
       SkillNames.JS,
@@ -265,9 +265,9 @@ export const EXPERIENCE: Experience[] = [
     title: "IoT Core Team Member",
     company: "SKEPSIS",
     description: [
-      "Developing and prototyping IoT solutions as part of the core engineering team.",
-      "Collaborating on hardware-software integration for connected device projects.",
-      "Contributing to research and development of innovative IoT applications.",
+      "Advanced connected-device ideas into testable IoT prototypes with the core engineering team.",
+      "Improved coordination across hardware and software boundaries for integrated device projects.",
+      "Turned research findings into practical directions for emerging IoT applications.",
     ],
     skills: [
       SkillNames.JS,
@@ -284,9 +284,9 @@ export const EXPERIENCE: Experience[] = [
     title: "Graphics Executive",
     company: "Geeks for Geeks SNU Chapter",
     description: [
-      "Designing visual content and graphics for events, social media, and branding initiatives.",
-      "Leading the design team in creating engaging promotional materials for tech events.",
-      "Collaborating with cross-functional teams to enhance the chapter's visual identity.",
+      "Established a more consistent visual language across events, social channels, and chapter initiatives.",
+      "Directed promotional design work that made technical events easier to recognize and understand.",
+      "Aligned cross-functional contributors around a clearer and more durable chapter identity.",
     ],
     skills: [
       SkillNames.CSS,

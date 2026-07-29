@@ -69,6 +69,14 @@ const skillsStyles = await readFile(
   new URL("../src/components/sections/skills.module.scss", import.meta.url),
   "utf8",
 );
+const experience = await readFile(
+  new URL("../src/components/sections/experience.tsx", import.meta.url),
+  "utf8",
+);
+const experienceStyles = await readFile(
+  new URL("../src/components/sections/experience.module.scss", import.meta.url),
+  "utf8",
+);
 
 function relativeLuminance([red, green, blue]) {
   const [r, g, b] = [red, green, blue].map((channel) => {
@@ -324,4 +332,24 @@ test("the Skills narrative preserves a semantic text equivalent for every key", 
   assert.doesNotMatch(skillsStyles, /animation\s*:|transition\s*:/);
   assert.match(skillsStyles, /height:\s*100svh/);
   assert.match(skillsStyles, /height:\s*150svh/);
+});
+
+test("the Experience narrative is a static semantic record of outcomes", () => {
+  assert.equal((experience.match(/<h2\b/g) ?? []).length, 1);
+  assert.match(experience, /aria-labelledby="experience-title"/);
+  assert.match(experience, /<ol[\s\S]*?aria-label="Professional experience"/);
+  assert.match(experience, /EXPERIENCE\.map/);
+  assert.match(experience, /experience\.title/);
+  assert.match(experience, /experience\.company/);
+  assert.match(experience, /experience\.startDate/);
+  assert.match(experience, /experience\.endDate/);
+  assert.match(experience, />\s*Impact\s*</);
+  assert.match(experience, />\s*Technologies\s*</);
+  assert.match(experience, /experience\.description\.map/);
+  assert.match(experience, /experience\.skills\.map/);
+  assert.doesNotMatch(
+    experience,
+    /framer-motion|SectionWrapper|SectionHeader|canvas|Spline|gsap/,
+  );
+  assert.doesNotMatch(experienceStyles, /animation\s*:|transition\s*:/);
 });
