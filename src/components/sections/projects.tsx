@@ -2,52 +2,42 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { ArrowUpRight, Github } from "lucide-react";
 
 import { PROJECT_RECORDS, type ProjectRecord } from "@/data/project-records";
 import { createProjectsChoreography } from "./projects-choreography";
 import styles from "./projects.module.scss";
 
-const FEATURED_PROJECT_COUNT = 3;
 const projects = Object.values(PROJECT_RECORDS);
 
-const ProjectActions = ({
-  title,
-  live,
-  github,
-}: {
-  title: string;
-  live: string;
-  github?: string;
-}) => (
+const ProjectActions = ({ project }: { project: ProjectRecord }) => (
   <div
     className={styles.projectActions}
     data-project-actions
     role="group"
-    aria-label={`${title} external links`}
+    aria-label={`${project.title} external links`}
   >
-    {github ? (
+    {project.github ? (
       <a
-        href={github}
+        href={project.github}
         target="_blank"
         rel="noreferrer"
         className={styles.projectAction}
         data-project-action
-        aria-label={`Open ${title} GitHub repository in a new tab`}
+        aria-label={`Open ${project.title} GitHub repository in a new tab`}
       >
         <span>GitHub</span>
         <Github aria-hidden="true" />
       </a>
     ) : null}
-    {live ? (
+    {project.live ? (
       <a
-        href={live}
+        href={project.live}
         target="_blank"
         rel="noreferrer"
         className={styles.projectAction}
         data-project-action
-        aria-label={`Open ${title} live demo in a new tab`}
+        aria-label={`Open ${project.title} live demo in a new tab`}
       >
         <span>Live demo</span>
         <ArrowUpRight aria-hidden="true" />
@@ -56,20 +46,13 @@ const ProjectActions = ({
   </div>
 );
 
-const ProjectCard = ({
-  project,
-  index,
-  hasCaseStudy,
-}: {
-  project: ProjectRecord;
-  index: number;
-  hasCaseStudy: boolean;
-}) => (
+const ProjectCard = ({ project }: { project: ProjectRecord }) => (
   <article
     className={styles.projectCard}
+    tabIndex={0}
     aria-labelledby={`project-${project.id}-title`}
+    aria-describedby={`project-${project.id}-description`}
     data-project-card
-    data-case-study-path={hasCaseStudy ? `/projects/${project.id}` : undefined}
   >
     <div className={styles.cardGlow} data-project-glow aria-hidden="true" />
 
@@ -81,7 +64,7 @@ const ProjectCard = ({
           alt={`${project.title} product interface`}
           fill
           data-project-image
-          sizes="(max-width: 59.99rem) calc(100vw - 2rem), (max-width: 96rem) calc(50vw - 3.75rem), 45rem"
+          sizes="(max-width: 959px) calc(100vw - 4rem), (max-width: 1440px) 40vw, 568px"
         />
       </div>
       <div
@@ -89,64 +72,29 @@ const ProjectCard = ({
         data-project-overlay
         aria-hidden="true"
       />
-      <ProjectActions
-        title={project.title}
-        live={project.live}
-        github={project.github}
-      />
+      <ProjectActions project={project} />
     </div>
 
     <div className={styles.projectBody}>
-      <div className={styles.projectIndex}>
-        <span>{String(index + 1).padStart(2, "0")}</span>
-        <span>{project.category}</span>
-      </div>
-
-      <div className={styles.projectSummary}>
-        <h4
-          id={`project-${project.id}-title`}
-          className={styles.projectTitle}
-        >
-          {hasCaseStudy ? (
-            <Link href={`/projects/${project.id}`}>
-              {project.title}
-              <ArrowUpRight data-project-title-icon aria-hidden="true" />
-            </Link>
-          ) : (
-            project.title
-          )}
-        </h4>
-        <p className={styles.valueProposition}>{project.valueProposition}</p>
-      </div>
-
-      <dl className={styles.projectMeta}>
-        <div>
-          <dt>Year</dt>
-          <dd>{project.year}</dd>
-        </div>
-        <div>
-          <dt>Status</dt>
-          <dd>{project.status}</dd>
-        </div>
-        <div className={styles.technologyField}>
-          <dt>Tech stack</dt>
-          <dd>
-            <ul aria-label={`${project.title} core technologies`}>
-              {project.coreTechnologies.map((technology) => (
-                <li key={technology}>{technology}</li>
-              ))}
-            </ul>
-          </dd>
-        </div>
-      </dl>
+      <h3
+        id={`project-${project.id}-title`}
+        className={styles.projectTitle}
+        data-project-title
+      >
+        {project.title}
+      </h3>
+      <p
+        id={`project-${project.id}-description`}
+        className={styles.valueProposition}
+      >
+        {project.valueProposition}
+      </p>
     </div>
   </article>
 );
 
 const ProjectsSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const featuredProjects = projects.slice(0, FEATURED_PROJECT_COUNT);
-  const archivedProjects = projects.slice(FEATURED_PROJECT_COUNT);
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -162,56 +110,21 @@ const ProjectsSection = () => {
     >
       <div className={styles.container}>
         <header className={styles.introduction} data-project-reveal>
-          <p className={styles.eyebrow}>04 / Selected systems</p>
           <h2 id="projects-title" className={styles.title}>
-            Products built around hard constraints.
+            Selected work.
           </h2>
           <p className={styles.statement}>
-            Selected work across identity, intellectual property, and open
-            financial infrastructure. Each system starts with a useful problem,
-            not a technology demo.
+            Six product experiments shaped around useful constraints.
           </p>
         </header>
 
-        <section
-          className={styles.featured}
-          aria-labelledby="featured-projects-title"
-        >
-          <div className={styles.indexHeader} data-project-reveal>
-            <h3 id="featured-projects-title">Featured projects</h3>
-            <p>{String(featuredProjects.length).padStart(2, "0")} records</p>
-          </div>
-
-          <ol className={styles.featuredGrid}>
-            {featuredProjects.map((project, index) => (
-              <li key={project.id} data-project-reveal>
-                <ProjectCard project={project} index={index} hasCaseStudy />
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section
-          className={styles.archive}
-          aria-labelledby="project-archive-title"
-        >
-          <div className={styles.indexHeader} data-project-reveal>
-            <h3 id="project-archive-title">Project archive</h3>
-            <p>{String(archivedProjects.length).padStart(2, "0")} records</p>
-          </div>
-
-          <ol className={styles.archiveGrid}>
-            {archivedProjects.map((project, index) => (
-              <li key={project.id} data-project-reveal>
-                <ProjectCard
-                  project={project}
-                  index={FEATURED_PROJECT_COUNT + index}
-                  hasCaseStudy={false}
-                />
-              </li>
-            ))}
-          </ol>
-        </section>
+        <ol className={styles.projectGrid} aria-label="Project gallery">
+          {projects.map((project) => (
+            <li key={project.id} data-project-reveal>
+              <ProjectCard project={project} />
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );

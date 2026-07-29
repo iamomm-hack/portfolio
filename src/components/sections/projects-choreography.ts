@@ -50,7 +50,7 @@ export function createProjectsChoreography(section: HTMLElement) {
     });
 
     media.add(
-      "(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)",
+      "(prefers-reduced-motion: no-preference)",
       () => {
         const cleanups: Array<() => void> = [];
         const cards = section.querySelectorAll<HTMLElement>(
@@ -63,9 +63,7 @@ export function createProjectsChoreography(section: HTMLElement) {
           const overlay = card.querySelector<HTMLElement>("[data-project-overlay]");
           const actions = card.querySelector<HTMLElement>("[data-project-actions]");
           const glow = card.querySelector<HTMLElement>("[data-project-glow]");
-          const titleIcon = card.querySelector<HTMLElement>(
-            "[data-project-title-icon]",
-          );
+          const title = card.querySelector<HTMLElement>("[data-project-title]");
           const actionButtons = card.querySelectorAll<HTMLElement>(
             "[data-project-action]",
           );
@@ -98,8 +96,8 @@ export function createProjectsChoreography(section: HTMLElement) {
               overwrite: "auto" as const,
             };
 
-            gsap.to(card, { ...tween, y: isActive ? -8 : 0 });
-            if (image) gsap.to(image, { ...tween, scale: isActive ? 1.05 : 1 });
+            gsap.to(card, { ...tween, y: isActive ? -6 : 0 });
+            if (image) gsap.to(image, { ...tween, scale: isActive ? 1.04 : 1 });
             if (overlay) gsap.to(overlay, { ...tween, opacity: isActive ? 0.444 : 1 });
             if (actions) {
               gsap.to(actions, {
@@ -109,12 +107,10 @@ export function createProjectsChoreography(section: HTMLElement) {
               });
             }
             if (glow) gsap.to(glow, { ...tween, opacity: isActive ? 1 : 0 });
-            if (titleIcon) {
-              gsap.to(titleIcon, {
+            if (title) {
+              gsap.to(title, {
                 ...tween,
-                opacity: isActive ? 1 : 0,
-                x: isActive ? 0 : -MOTION_TOKENS.distance.subtle,
-                y: isActive ? 0 : MOTION_TOKENS.distance.subtle,
+                color: isActive ? "rgb(224, 232, 205)" : "rgb(242, 240, 233)",
               });
             }
           };
@@ -189,7 +185,7 @@ export function createProjectsChoreography(section: HTMLElement) {
               overlay,
               actions,
               glow,
-              titleIcon,
+              title,
               ...Array.from(actionButtons),
             ]);
             gsap.set(
@@ -200,10 +196,10 @@ export function createProjectsChoreography(section: HTMLElement) {
                 overlay,
                 actions,
                 glow,
-                titleIcon,
+                title,
                 ...Array.from(actionButtons),
               ].filter(Boolean),
-              { clearProps: "transform,opacity" },
+              { clearProps: "transform,opacity,color" },
             );
           });
         });

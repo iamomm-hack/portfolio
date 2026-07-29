@@ -433,35 +433,34 @@ test("the Experience narrative is a static semantic record of outcomes", () => {
   assert.doesNotMatch(experienceStyles, /animation\s*:|transition\s*:/);
 });
 
-test("the Projects overview separates three interactive featured systems from the archive", () => {
+test("the Projects overview is one compact six-project gallery", () => {
   assert.equal((projectsSection.match(/<h2\b/g) ?? []).length, 1);
   assert.match(projectsSection, /aria-labelledby="projects-title"/);
-  assert.match(projectsSection, /const FEATURED_PROJECT_COUNT = 3/);
-  assert.match(projectsSection, /projects\.slice\(0, FEATURED_PROJECT_COUNT\)/);
-  assert.match(projectsSection, /projects\.slice\(FEATURED_PROJECT_COUNT\)/);
-  assert.match(projectsSection, /Featured projects/);
-  assert.match(projectsSection, /Project archive/);
+  assert.match(projectsSection, /projects\.map/);
+  assert.match(projectsSection, /aria-label="Project gallery"/);
+  assert.match(projectsSection, /tabIndex=\{0\}/);
   assert.match(projectsSection, /project\.valueProposition/);
-  assert.match(projectsSection, /project\.year/);
-  assert.match(projectsSection, /project\.status/);
-  assert.match(projectsSection, /project\.coreTechnologies/);
-  assert.match(projectsSection, /data-case-study-path/);
   assert.match(projectsSection, /data-project-card/);
   assert.match(projectsSection, /data-project-media/);
   assert.match(projectsSection, /next\/image/);
-  assert.match(projectsSection, /Open \$\{title\} live demo in a new tab/);
-  assert.match(projectsSection, /Open \$\{title\} GitHub repository in a new tab/);
+  assert.match(projectsSection, /Open \$\{project\.title\} live demo in a new tab/);
+  assert.match(projectsSection, /Open \$\{project\.title\} GitHub repository in a new tab/);
+  assert.doesNotMatch(
+    projectsSection,
+    /FEATURED_PROJECT_COUNT|Featured projects|Project archive|record count|project\.year|project\.status|project\.coreTechnologies|data-case-study-path/,
+  );
   assert.doesNotMatch(
     projectsSection,
     /Modal|FloatingDock|SectionWrapper|SectionHeader|framer-motion|canvas|Spline/,
   );
-  assert.match(projectsStyles, /max-width:\s*1500px/);
+  assert.match(projectsStyles, /max-width:\s*1400px/);
   assert.match(projectsStyles, /grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
-  assert.match(projectsStyles, /gap:\s*40px/);
+  assert.match(projectsStyles, /gap:\s*32px/);
   assert.match(projectsStyles, /aspect-ratio:\s*16 \/ 9/);
-  assert.match(projectsStyles, /font-size:\s*56px/);
-  assert.match(projectsStyles, /font-size:\s*42px/);
-  assert.match(projectsStyles, /font-size:\s*34px/);
+  assert.match(projectsStyles, /max-width:\s*568px/);
+  assert.match(projectsStyles, /max-height:\s*320px/);
+  assert.match(projectsStyles, /border-radius:\s*18px/);
+  assert.match(projectsStyles, /-webkit-line-clamp:\s*2/);
   assert.match(projectsStyles, /@media \(max-width: 959px\)/);
   assert.match(projectsStyles, /prefers-reduced-motion:\s*reduce/);
   assert.doesNotMatch(projectsStyles, /animation\s*:/);
@@ -474,7 +473,8 @@ test("the Projects overview separates three interactive featured systems from th
   assert.match(projectsChoreography, /gsap\.timeline/);
   assert.match(projectsChoreography, /gsap\.quickTo/);
   assert.match(projectsChoreography, /PROJECT_HOVER_DURATION = 0\.3/);
-  assert.match(projectsChoreography, /scale: isActive \? 1\.05 : 1/);
+  assert.match(projectsChoreography, /scale: isActive \? 1\.04 : 1/);
+  assert.match(projectsChoreography, /y: isActive \? -6 : 0/);
   assert.match(projectsChoreography, /prefers-reduced-motion: reduce/);
   assert.match(projectsChoreography, /pointerenter/);
   assert.doesNotMatch(
