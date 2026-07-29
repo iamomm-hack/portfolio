@@ -1,7 +1,5 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
-import React from "react";
 // @ts-ignore
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css/core";
@@ -73,8 +71,7 @@ const PROJECTS = [
 ];
 function Page() {
   return (
-    <>
-      <div className="container mx-auto md:px-[50px] xl:px-[150px] text-zinc-300 h-full">
+    <main className="container mx-auto md:px-[50px] xl:px-[150px] text-zinc-300 h-full">
         <h1 className="text-4xl mt-[100px] mb-[50px]">Projects</h1>
         <ul className="grid  md:grid-cols-2 lg:grid-cols-3 gap-10 place-content-around ">
           {PROJECTS.map((project) => (
@@ -95,16 +92,17 @@ function Page() {
                     easing: "cubic-bezier(0.25, 1, 0.5, 1)",
                     arrows: false,
                   }}
-                  aria-label="My Favorite Images"
+                  aria-label={`${project.name} interface screenshots`}
                 >
                   {project.images.map((image) => (
                     <SplideSlide key={image}>
                       <Image
                         src={image}
-                        alt={`screenshot of "${project.name}`}
+                        alt={`${project.name} interface`}
                         className="w-[300px] h-[200px] rounded-md bg-zinc-900 "
                         width={300}
                         height={400}
+                        sizes="300px"
                         style={{ height: "200px" }}
                       />
                     </SplideSlide>
@@ -120,8 +118,7 @@ function Page() {
             </li>
           ))}
         </ul>
-      </div>
-    </>
+    </main>
   );
 }
 

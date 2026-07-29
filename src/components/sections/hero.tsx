@@ -93,7 +93,7 @@ const HeroSection = () => {
           data-hero-motion="poster"
         >
           <Image
-            src="/assets/keyboard-poster.png"
+            src="/assets/keyboard-poster.jpg"
             alt="Colorful three-dimensional keyboard displaying technology symbols"
             width={1586}
             height={992}

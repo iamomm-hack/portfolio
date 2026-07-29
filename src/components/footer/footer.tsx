@@ -1,7 +1,5 @@
-import React from "react";
 import Link from "next/link";
 import { footer } from "./config";
-import { Button } from "../ui/button";
 import SocialMediaButtons from "../social/social-media-icons";
 import { config } from "@/data/config";
 
@@ -13,17 +11,17 @@ function Footer() {
         © {year} {config.author}. All rights reserved.
       </p>
       <SocialMediaButtons />
-      <nav className="flex gap-4 sm:gap-6 z-10">
-        {footer.map((link, index) => {
+      <nav aria-label="Footer navigation" className="flex gap-4 sm:gap-6 z-10">
+        {footer.map((link) => {
           const { title, href } = link;
 
           return (
             <Link
-              className="text-xs underline-offset-4 hover:underline"
+              className="inline-flex min-h-11 items-center rounded-control px-token-3 text-xs underline-offset-4 hover:underline"
               href={href}
-              key={`l_${index}`}
+              key={href}
             >
-              <Button variant={"link"}>{title}</Button>
+              {title}
             </Link>
           );
         })}

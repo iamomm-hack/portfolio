@@ -1,5 +1,5 @@
-import React from "react";
 import { getBlogPost, getBlogPosts } from "@/lib/mdx";
+import type { Metadata } from "next";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import ScrollProgress from "@/components/ui/scroll-progress";
 import Link from "next/link";
@@ -14,17 +14,30 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
   const post = getBlogPost(params.slug);
   return {
-    title: `${post.metadata.title} | Portfolio`,
+    title: post.metadata.title,
     description: post.metadata.summary,
+    alternates: { canonical: `/blogs/${params.slug}` },
+    openGraph: {
+      title: post.metadata.title,
+      description: post.metadata.summary,
+      url: `/blogs/${params.slug}`,
+      type: "article",
+      publishedTime: post.metadata.publishedAt,
+      authors: post.metadata.author ? [post.metadata.author] : undefined,
+    },
   };
 }
 
 const components = {
   h1: (props: any) => (
-    <h1 className="text-3xl md:text-5xl font-bold mt-12 mb-6 text-zinc-100" {...props} />
+    <h2 className="text-3xl md:text-5xl font-bold mt-12 mb-6 text-zinc-100" {...props} />
   ),
   h2: (props: any) => (
     <h2 className="text-2xl md:text-3xl font-semibold mt-10 mb-4 text-zinc-200" {...props} />
@@ -63,7 +76,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
   const post = getBlogPost(params.slug);
 
   return (
-    <div className="min-h-screen relative font-sans">
+    <main className="min-h-screen relative font-sans">
       <ScrollProgress className="bg-gradient-to-r from-purple-500 to-pink-500" />
 
       <div className="container mx-auto px-4 py-24 max-w-3xl">
@@ -73,7 +86,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
             className="inline-flex items-center text-zinc-500 hover:text-purple-400 transition-colors mb-8 group"
           >
             <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-            Back to Blogs
+            Back to blogs
           </Link>
         </RevealAnimation>
 
@@ -90,10 +103,10 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
               {post.metadata.title}
             </h1>
             <div className="flex items-center gap-6 text-zinc-500 text-sm border-b border-zinc-800 pb-8">
-              <div className="flex items-center gap-2">
+              <time dateTime={post.metadata.publishedAt} className="flex items-center gap-2">
                 <User className="w-4 h-4" />
                 {post.metadata.author}
-              </div>
+              </time>
               <div className="flex items-center gap-2">
                 <CalendarDays className="w-4 h-4" />
                 {post.metadata.publishedAt}
@@ -108,6 +121,6 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
           </article>
         </RevealAnimation>
       </div>
-    </div>
+    </main>
   );
 }

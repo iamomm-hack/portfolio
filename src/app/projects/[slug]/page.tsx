@@ -26,8 +26,20 @@ export function generateMetadata({
   }
 
   return {
-    title: `${project.title} — Case Study`,
+    title: `${project.title} — Case study`,
     description: project.valueProposition,
+    alternates: { canonical: `/projects/${project.id}` },
+    openGraph: {
+      title: `${project.title} — Case study`,
+      description: project.valueProposition,
+      url: `/projects/${project.id}`,
+      images: [
+        {
+          url: project.src,
+          alt: `${project.title} product interface`,
+        },
+      ],
+    },
   };
 }
 

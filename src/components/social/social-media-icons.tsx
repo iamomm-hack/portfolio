@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const BUTTONS = [
   {
-    name: "Github",
+    name: "GitHub",
     href: config.social.github,
     icon: <SiGithub size={"24"} color={"#fff"} />,
   },
@@ -37,9 +37,16 @@ const SocialMediaButtons = () => {
     <div ref={ref} className="z-10">
       {show &&
         BUTTONS.map((button) => (
-          <Link href={button.href} key={button.name} target="_blank">
-            <Button variant={"ghost"}>{button.icon}</Button>
-          </Link>
+          <Button variant="ghost" asChild key={button.name}>
+            <Link
+              href={button.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={button.name}
+            >
+              {button.icon}
+            </Link>
+          </Button>
         ))}
     </div>
   );

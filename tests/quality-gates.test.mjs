@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access, readFile, readdir } from "node:fs/promises";
+import { access, readFile, readdir, stat } from "node:fs/promises";
 import test from "node:test";
 
 const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
@@ -85,10 +85,6 @@ const projectsStyles = await readFile(
   new URL("../src/components/sections/projects.module.scss", import.meta.url),
   "utf8",
 );
-const projectsData = await readFile(
-  new URL("../src/data/projects.tsx", import.meta.url),
-  "utf8",
-);
 const projectRecords = await readFile(
   new URL("../src/data/project-records.ts", import.meta.url),
   "utf8",
@@ -129,6 +125,22 @@ const contactApi = await readFile(
 );
 const footer = await readFile(
   new URL("../src/components/footer/footer.tsx", import.meta.url),
+  "utf8",
+);
+const aboutPage = await readFile(
+  new URL("../src/app/about/page.tsx", import.meta.url),
+  "utf8",
+);
+const contactPage = await readFile(
+  new URL("../src/app/contact/page.tsx", import.meta.url),
+  "utf8",
+);
+const sitemapRoute = await readFile(
+  new URL("../src/app/sitemap.ts", import.meta.url),
+  "utf8",
+);
+const robotsRoute = await readFile(
+  new URL("../src/app/robots.ts", import.meta.url),
   "utf8",
 );
 
@@ -264,6 +276,11 @@ test("the scene lifecycle has explicit ownership and pause gates", () => {
   assert.match(labScene, /prefers-reduced-motion: reduce/);
   assert.match(labScene, /application\.play\(\)/);
   assert.match(labScene, /application\.stop\(\)/);
+  assert.match(labScene, /useSceneActivationIntent/);
+  assert.match(labScene, /pointerdown/);
+  assert.match(labScene, /keydown/);
+  assert.match(labScene, /scroll/);
+  assert.doesNotMatch(labScene, /pointermove|mousemove/);
   assert.match(animatedBackground, /gsap\.ticker\.wake\(\)/);
   assert.match(animatedBackground, /gsap\.ticker\.sleep\(\)/);
   assert.doesNotMatch(labScene, /requestAnimationFrame/);
@@ -345,10 +362,10 @@ test("the frozen Hero exposes one static editorial hierarchy", () => {
 
 test("the keyboard poster reserves the live scene geometry", async () => {
   await assert.doesNotReject(
-    access(new URL("../public/assets/keyboard-poster.png", import.meta.url)),
+    access(new URL("../public/assets/keyboard-poster.jpg", import.meta.url)),
   );
 
-  assert.match(hero, /src="\/assets\/keyboard-poster\.png"/);
+  assert.match(hero, /src="\/assets\/keyboard-poster\.jpg"/);
   assert.match(hero, /width=\{1586\}/);
   assert.match(hero, /height=\{992\}/);
   assert.match(heroStyles, /aspect-ratio:\s*793 \/ 496/);
@@ -426,7 +443,8 @@ test("the Projects overview separates three featured systems from the archive", 
     /Modal|FloatingDock|SectionWrapper|SectionHeader|framer-motion|canvas|Spline|gsap/,
   );
   assert.doesNotMatch(projectsStyles, /animation\s*:|transition\s*:/);
-  assert.match(projectsData, /PROJECT_RECORDS/);
+  assert.match(projectsSection, /@\/data\/project-records/);
+  assert.doesNotMatch(projectsSection, /@\/data\/projects/);
   assert.equal((projectRecords.match(/valueProposition:/g) ?? []).length, 7);
   assert.equal((projectRecords.match(/coreTechnologies:/g) ?? []).length, 7);
 });
@@ -494,5 +512,41 @@ test("the global polish pass preserves the frozen editorial rhythm", () => {
   assert.doesNotMatch(
     `${contactStyles}\n${footer}`,
     /animation\s*:|transition\s*:|framer-motion|requestAnimationFrame/,
+  );
+});
+
+test("the production metadata surface is complete", () => {
+  assert.match(rootLayout, /metadataBase: new URL\(config\.site\)/);
+  assert.match(rootLayout, /canonical: "\/"/);
+  assert.match(rootLayout, /application\/ld\+json/);
+  assert.match(rootLayout, /"@type": "Person"/);
+  assert.match(sitemapRoute, /FEATURED_PROJECT_IDS/);
+  assert.match(sitemapRoute, /getBlogPosts\(\)/);
+  assert.match(robotsRoute, /sitemap:/);
+  assert.match(robotsRoute, /disallow: \["\/admin", "\/api\/"\]/);
+});
+
+test("secondary documents preserve one accessible primary heading", () => {
+  assert.equal((aboutPage.match(/<h1\b/g) ?? []).length, 1);
+  assert.equal((contactPage.match(/<h1\b/g) ?? []).length, 1);
+  assert.match(contactPage, /<main>/);
+  assert.match(contactPage, /name="email"/);
+  assert.match(contactPage, /name="message"/);
+  assert.match(footer, /aria-label="Footer navigation"/);
+  assert.match(aboutPage, /w-full min-w-0 lg:basis-3\/4/);
+  assert.doesNotMatch(aboutPage, /w-\[500px\]/);
+});
+
+test("the optimized poster stays within its production budget", async () => {
+  const poster = await stat(
+    new URL("../public/assets/keyboard-poster.jpg", import.meta.url),
+  );
+
+  assert.ok(poster.size <= 150_000);
+  await assert.rejects(
+    access(new URL("../public/assets/keyboard-poster.png", import.meta.url)),
+  );
+  await assert.doesNotReject(
+    access(new URL("../public/assets/seo/og-image.jpg", import.meta.url)),
   );
 });

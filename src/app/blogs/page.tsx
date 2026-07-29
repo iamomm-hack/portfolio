@@ -1,14 +1,20 @@
-import React from "react";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getBlogPosts } from "@/lib/mdx";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CalendarDays, User } from "lucide-react";
 import RevealAnimation from "@/components/reveal-animations";
 
-export const metadata = {
-  title: "Blog | Portfolio",
-  description: "Thoughts, tutorials, and updates from the space.",
+export const metadata: Metadata = {
+  title: "Field notes",
+  description: "Technical notes from experiments, builds, and the systems behind them.",
+  alternates: { canonical: "/blogs" },
+  openGraph: {
+    title: "Field notes — Om Kumar",
+    description: "Technical notes from experiments, builds, and the systems behind them.",
+    url: "/blogs",
+  },
 };
 
 export default function BlogPage() {
@@ -20,13 +26,13 @@ export default function BlogPage() {
   });
 
   return (
-    <div className="container mx-auto px-4 py-24 min-h-screen font-sans">
+    <main className="container mx-auto px-4 py-24 min-h-screen font-sans">
       <RevealAnimation>
         <h1 className="text-4xl md:text-6xl font-bold text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
-          Space Log
+          Field notes
         </h1>
         <p className="text-zinc-400 text-center mb-12 max-w-2xl mx-auto">
-          Documenting my journey through the cosmos of code.
+          Technical notes from experiments, builds, and the systems behind them.
         </p>
       </RevealAnimation>
 
@@ -40,10 +46,10 @@ export default function BlogPage() {
                     <Badge variant="outline" className="border-purple-500/30 text-purple-400">
                       {post.metadata.tags?.[0] || "Blog"}
                     </Badge>
-                    <span className="text-xs text-zinc-500 flex items-center gap-1">
+                    <time dateTime={post.metadata.publishedAt} className="text-xs text-zinc-500 flex items-center gap-1">
                       <CalendarDays className="w-3 h-3" />
                       {post.metadata.publishedAt}
-                    </span>
+                    </time>
                   </div>
                   <CardTitle className="text-xl group-hover:text-purple-400 transition-colors">
                     {post.metadata.title}
@@ -66,6 +72,6 @@ export default function BlogPage() {
           </RevealAnimation>
         ))}
       </div>
-    </div>
+    </main>
   );
 }

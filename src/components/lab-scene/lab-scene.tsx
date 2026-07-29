@@ -64,6 +64,39 @@ function useDocumentVisibility() {
   return isDocumentVisible;
 }
 
+function useSceneActivationIntent(isReducedMotion: boolean) {
+  const [hasActivationIntent, setHasActivationIntent] = useState(false);
+
+  useEffect(() => {
+    if (isReducedMotion) return;
+
+    const activateScene = () => {
+      setHasActivationIntent(true);
+      window.removeEventListener("pointerdown", activateScene);
+      window.removeEventListener("keydown", activateScene);
+      window.removeEventListener("scroll", activateScene);
+    };
+
+    window.addEventListener("pointerdown", activateScene, {
+      once: true,
+      passive: true,
+    });
+    window.addEventListener("keydown", activateScene, { once: true });
+    window.addEventListener("scroll", activateScene, {
+      once: true,
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener("pointerdown", activateScene);
+      window.removeEventListener("keydown", activateScene);
+      window.removeEventListener("scroll", activateScene);
+    };
+  }, [isReducedMotion]);
+
+  return hasActivationIntent;
+}
+
 export default function LabScene() {
   const ownerToken = useMemo(
     () => createExpensiveExperienceToken("scene"),
@@ -74,6 +107,7 @@ export default function LabScene() {
   const [hasOwnership, setHasOwnership] = useState(false);
   const [isSceneReady, setIsSceneReady] = useState(false);
   const isReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const hasActivationIntent = useSceneActivationIntent(isReducedMotion);
   const isInViewport = useSceneViewportPresence();
   const isDocumentVisible = useDocumentVisibility();
 
@@ -88,7 +122,8 @@ export default function LabScene() {
     };
   }, [ownerToken]);
 
-  const shouldLoadScene = hasOwnership && !isReducedMotion;
+  const shouldLoadScene =
+    hasOwnership && hasActivationIntent && !isReducedMotion;
   const isSceneActive =
     shouldLoadScene && isInViewport && isDocumentVisible;
 
@@ -124,6 +159,7 @@ export default function LabScene() {
       className="contents"
       data-lab-scene-active={isSceneActive}
       data-lab-scene-loaded={shouldLoadScene}
+      data-lab-scene-intent={hasActivationIntent}
       data-lab-scene-owner={hasOwnership ? "scene" : "none"}
       data-lab-scene-ready={isSceneReady}
     >

@@ -10,20 +10,29 @@ import Script from "next/script";
 import { Providers } from "@/components/providers";
 
 export const metadata: Metadata = {
-  title: config.title,
+  metadataBase: new URL(config.site),
+  title: {
+    default: config.title,
+    template: "%s — Om Kumar",
+  },
   description: config.description.long,
   keywords: config.keywords,
   authors: [{ name: config.author }],
+  creator: config.author,
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: config.title,
     description: config.description.short,
     url: config.site,
+    siteName: config.author,
     images: [
       {
         url: config.ogImg,
-        width: 800,
-        height: 600,
-        alt: "Portfolio preview",
+        width: 1200,
+        height: 630,
+        alt: "Om Kumar product engineering portfolio",
       },
     ],
     type: "website",
@@ -45,17 +54,39 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: config.author,
+    url: config.site,
+    email: `mailto:${config.email}`,
+    jobTitle: "Product Engineer",
+    sameAs: [
+      config.social.github,
+      config.social.linkedin,
+      config.social.twitter,
+    ],
+  };
+
   return (
     <html lang="en" className="dark font-sans">
       <head>
-        <Script
-          defer
-          src={process.env.UMAMI_DOMAIN}
-          data-website-id={process.env.UMAMI_SITE_ID}
-        ></Script>
-        {/* <Analytics /> */}
+        {process.env.UMAMI_DOMAIN && process.env.UMAMI_SITE_ID ? (
+          <Script
+            defer
+            src={process.env.UMAMI_DOMAIN}
+            data-website-id={process.env.UMAMI_SITE_ID}
+          />
+        ) : null}
       </head>
       <body>
+        <script
+          id="person-structured-data"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+          }}
+        />
         <Providers>
           <Header />
           {children}

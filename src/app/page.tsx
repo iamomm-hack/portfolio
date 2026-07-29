@@ -1,6 +1,3 @@
-"use client";
-
-import React from "react";
 import LabScene from "@/components/lab-scene/lab-scene";
 import SkillsSection from "@/components/sections/skills";
 import ExperienceSection from "@/components/sections/experience";

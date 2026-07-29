@@ -197,7 +197,7 @@ export const SKILLS: Record<SkillNames, Skill> = {
   [SkillNames.NGINX]: {
     id: 21,
     name: "nginx",
-    label: "NginX",
+    label: "NGINX",
     shortDescription: "Traffic routing, proxying, and efficient static delivery.",
     color: "#008000",
     icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nginx/nginx-original.svg",

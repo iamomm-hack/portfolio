@@ -1,9 +1,9 @@
 const config = {
-  title: "Om Kumar | Full-Stack & Web3 Developer | IoT & AI Engineer",
+  title: "Om Kumar — Product Engineer",
   description: {
-    long: "Explore the portfolio of Om Kumar — a Full-Stack Developer, Web3 Builder, IoT Enthusiast, and AI Engineer. Specializing in decentralized applications, smart contracts, blockchain protocols, and AI-powered solutions. Discover my latest work, including ChatMint AI, TrustMarket DEX, QuantX, and more. Let's build the future together!",
+    long: "Om Kumar designs and engineers resilient digital products across Web3, connected systems, and applied AI. Explore selected work, technical experience, and case-study records.",
     short:
-      "Om Kumar — Full-Stack & Web3 Developer, IoT Developer, and AI Engineer building decentralized apps, smart contracts, and AI-powered solutions.",
+      "Product engineering across Web3, connected systems, and applied AI.",
   },
   keywords: [
     "Om Kumar",
@@ -35,7 +35,7 @@ const config = {
   // for github stars button
   githubUsername: "iamomm-hack",
   get ogImg() {
-    return this.site + "/assets/seo/og-image.png";
+    return this.site + "/assets/seo/og-image.jpg";
   },
   social: {
     twitter: "https://x.com/omdotcmd",

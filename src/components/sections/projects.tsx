@@ -1,7 +1,8 @@
-import projects from "@/data/projects";
+import { PROJECT_RECORDS } from "@/data/project-records";
 import styles from "./projects.module.scss";
 
 const FEATURED_PROJECT_COUNT = 3;
+const projects = Object.values(PROJECT_RECORDS);
 
 const ProjectsSection = () => {
   const featuredProjects = projects.slice(0, FEATURED_PROJECT_COUNT);
